@@ -1,0 +1,21 @@
+### Maven / Build
+target/
+!.mvn/wrapper/maven-wrapper.jar
+.mvn/wrapper/maven-wrapper.properties
+.log
+.logs/
+*.log
+
+### IDEs
+.idea/
+*.iml
+out/
+.vscode/
+
+### OS
+.DS_Store
+Thumbs.db
+
+### Misc
+*.tmp
+*.cache
