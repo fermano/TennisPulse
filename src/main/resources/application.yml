@@ -32,6 +32,7 @@ spring:
 logging:
   level:
     root: INFO
-    org.springframework.web: INFO
+    org.springframework.web: WARN
     org.hibernate.SQL: WARN
-    com.tennispulse: INFO
+    # use trace to enable method entry and exit logging for api and service packages
+#    com.tennispulse.logging: TRACE

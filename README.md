@@ -162,14 +162,11 @@ postman/tennis-pulse.postman_collection.json
 
 ---
 
-## 🔮 Roadmap (Tech Debt)
+## 🔮 Roadmap
 
-- Logging  
-- AOP aspect for method entry/exit  
 - Redis caching  
 - MongoDB analytics  
 - SQS event on match completed  
-- Expand scoring model  
 
 ---
 
