@@ -10,6 +10,7 @@ CREATE TABLE match (
     start_time  TIMESTAMPTZ,
     end_time    TIMESTAMPTZ,
     status      VARCHAR(32),
+    created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 
     CONSTRAINT fk_match_club
         FOREIGN KEY (club_id) REFERENCES club (id),

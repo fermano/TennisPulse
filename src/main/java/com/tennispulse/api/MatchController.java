@@ -91,6 +91,8 @@ public class MatchController {
             String finalScore,
             MatchStatus status,
             Instant startTime,
-            Instant endTime
+            Instant endTime,
+            Instant createdAt,
+            Instant updatedAt
     ) {}
 }

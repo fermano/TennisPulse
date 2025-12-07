@@ -10,7 +10,8 @@ CREATE TABLE club (
     name             VARCHAR(255) NOT NULL,
     city             VARCHAR(255),
     country          VARCHAR(255),
-    surface_default  VARCHAR(32)          -- CLAY / HARD / GRASS (CourtSurface enum)
+    surface_default  VARCHAR(32),          -- CLAY / HARD / GRASS (CourtSurface enum)
+    created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE INDEX idx_player_name ON player (name);

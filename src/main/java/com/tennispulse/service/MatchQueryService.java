@@ -47,7 +47,9 @@ public class MatchQueryService {
                 m.getFinalScore(),
                 m.getStatus(),
                 m.getStartTime(),
-                m.getEndTime()
+                m.getEndTime(),
+                m.getCreatedAt(),
+                m.getUpdatedAt()
         );
     }
 }

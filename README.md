@@ -164,7 +164,6 @@ postman/tennis-pulse.postman_collection.json
 
 ## 🔮 Roadmap (Tech Debt)
 
-- Add updated_at column  
 - Logging  
 - AOP aspect for method entry/exit  
 - Redis caching  
