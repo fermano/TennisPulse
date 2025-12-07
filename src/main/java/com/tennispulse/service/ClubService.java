@@ -3,12 +3,14 @@ package com.tennispulse.service;
 import com.tennispulse.domain.ClubEntity;
 import com.tennispulse.repository.ClubRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ClubService {
@@ -17,7 +19,9 @@ public class ClubService {
 
     public ClubEntity create(ClubEntity club) {
         club.setId(null);
-        return clubRepository.save(club);
+        ClubEntity createdClub = clubRepository.save(club);
+        log.info("Club created: id={}, name={}", createdClub.getId(), createdClub.getName());
+        return createdClub;
     }
 
     public List<ClubEntity> findAll() {
@@ -34,13 +38,18 @@ public class ClubService {
         existing.setName(updated.getName());
         existing.setCity(updated.getCity());
         existing.setCountry(updated.getCountry());
-        return clubRepository.save(existing);
+
+        ClubEntity saved = clubRepository.save(existing);
+        log.info("Club updated: id={}, name={}, city={}, country={}",
+                saved.getId(), saved.getName(), saved.getCity(), saved.getCountry());
+        return saved;
     }
 
     public void delete(UUID id) {
         ClubEntity existing = findById(id);
 
         if (existing.isDeleted()) {
+            log.info("Club already soft-deleted: id={}", id);
             return;
         }
 
@@ -51,5 +60,6 @@ public class ClubService {
         existing.setCountry(null);
 
         clubRepository.save(existing);
+        log.info("Club soft-deleted: id={}", id);
     }
 }

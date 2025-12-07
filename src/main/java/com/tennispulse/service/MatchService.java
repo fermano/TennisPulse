@@ -8,6 +8,7 @@ import com.tennispulse.repository.ClubRepository;
 import com.tennispulse.repository.MatchRepository;
 import com.tennispulse.repository.PlayerRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +16,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MatchService {
@@ -42,7 +44,10 @@ public class MatchService {
                 .endTime(null)
                 .build();
 
-        return matchRepository.save(match);
+        MatchEntity saved = matchRepository.save(match);
+        log.info("Match created: id={}, clubId={}, player1Id={}, player2Id={}, status={}",
+                saved.getId(), clubId, player1Id, player2Id, saved.getStatus());
+        return saved;
     }
 
     public List<MatchEntity> findAll() {
@@ -54,8 +59,14 @@ public class MatchService {
                 .orElseThrow(() -> new IllegalArgumentException("Match not found: " + id));
     }
 
+    @Transactional
     public MatchEntity updateStatus(UUID id, MatchStatus status, UUID winnerId, String finalScore) {
         MatchEntity match = findById(id);
+        MatchStatus oldStatus = match.getStatus();
+
+        log.info("Updating match status: id={}, from={}, to={}, winnerId={}, finalScore={}",
+                id, oldStatus, status, winnerId, finalScore);
+
         match.setStatus(status);
 
         if (status == MatchStatus.IN_PROGRESS && match.getStartTime() == null) {
@@ -63,7 +74,6 @@ public class MatchService {
         }
 
         if (status == MatchStatus.COMPLETED) {
-            // winner and finalScore are REQUIRED here
             if (winnerId == null || finalScore == null || finalScore.isBlank()) {
                 throw new IllegalArgumentException("Winner and finalScore are required when completing a match.");
             }
@@ -76,10 +86,22 @@ public class MatchService {
             match.setEndTime(Instant.now());
         }
 
-        return matchRepository.save(match);
+        if (status == MatchStatus.CANCELLED) {
+            match.setWinner(null);
+            match.setFinalScore(null);
+            match.setEndTime(Instant.now());
+        }
+
+        MatchEntity saved = matchRepository.save(match);
+        log.info("Match status updated: id={}, from={} to={}, winnerId={}, finalScore={}",
+                id, oldStatus, saved.getStatus(),
+                saved.getWinner() != null ? saved.getWinner().getId() : null,
+                saved.getFinalScore());
+        return saved;
     }
 
     public void delete(UUID id) {
         matchRepository.deleteById(id);
+        log.info("Match deleted: id={}", id);
     }
 }

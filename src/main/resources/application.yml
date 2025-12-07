@@ -33,6 +33,5 @@ logging:
   level:
     root: INFO
     org.springframework.web: INFO
-    # Uncomment to debug SQL
-    # org.hibernate.SQL: DEBUG
-    # org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.hibernate.SQL: WARN
+    com.tennispulse: INFO
