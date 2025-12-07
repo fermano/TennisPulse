@@ -5,6 +5,7 @@ import com.tennispulse.repository.ClubRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,7 +21,7 @@ public class ClubService {
     }
 
     public List<ClubEntity> findAll() {
-        return clubRepository.findAll();
+        return clubRepository.findByDeletedFalse();
     }
 
     public ClubEntity findById(UUID id) {
@@ -37,6 +38,18 @@ public class ClubService {
     }
 
     public void delete(UUID id) {
-        clubRepository.deleteById(id);
+        ClubEntity existing = findById(id);
+
+        if (existing.isDeleted()) {
+            return;
+        }
+
+        existing.setDeleted(true);
+        existing.setDeletedAt(Instant.now());
+        existing.setName("Deleted club " + id.toString().substring(0, 8));
+        existing.setCity(null);
+        existing.setCountry(null);
+
+        clubRepository.save(existing);
     }
 }

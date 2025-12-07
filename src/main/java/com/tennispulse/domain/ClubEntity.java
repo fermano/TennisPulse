@@ -2,6 +2,8 @@ package com.tennispulse.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.time.Instant;
 import java.util.UUID;
 
 @Entity
@@ -26,5 +28,11 @@ public class ClubEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "surface_default")
-    private CourtSurface defaultSurface; // example: CLAY, HARD, GRASS
+    private CourtSurface defaultSurface;
+
+    @Column(name = "deleted", nullable = false)
+    private boolean deleted;
+
+    @Column(name = "deleted_at")
+    private Instant deletedAt;
 }

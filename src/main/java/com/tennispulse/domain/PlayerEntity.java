@@ -37,6 +37,12 @@ public class PlayerEntity {
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
+    @Column(name = "deleted", nullable = false)
+    private boolean deleted;
+
+    @Column(name = "deleted_at")
+    private Instant deletedAt;
+
     @PrePersist
     protected void onCreate() {
         if (this.createdAt == null) {

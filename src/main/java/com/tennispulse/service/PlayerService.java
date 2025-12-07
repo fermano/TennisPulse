@@ -5,6 +5,7 @@ import com.tennispulse.repository.PlayerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,7 +21,7 @@ public class PlayerService {
     }
 
     public List<PlayerEntity> findAll() {
-        return playerRepository.findAll();
+        return playerRepository.findByDeletedFalse();
     }
 
     public PlayerEntity findById(UUID id) {
@@ -36,6 +37,17 @@ public class PlayerService {
     }
 
     public void delete(UUID id) {
-        playerRepository.deleteById(id);
+        PlayerEntity existing = findById(id);
+
+        if (existing.isDeleted()) {
+            return;
+        }
+
+        existing.setDeleted(true);
+        existing.setDeletedAt(Instant.now());
+        existing.setName("Deleted player " + id.toString().substring(0, 8));
+        existing.setHandedness(null);
+
+        playerRepository.save(existing);
     }
 }

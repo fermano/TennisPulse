@@ -164,7 +164,6 @@ postman/tennis-pulse.postman_collection.json
 
 ## 🔮 Roadmap (Tech Debt)
 
-- Soft delete for Player & Club  
 - Add updated_at column  
 - Logging  
 - AOP aspect for method entry/exit  
