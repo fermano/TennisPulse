@@ -10,15 +10,11 @@ This project is intentionally domain-rich and personality-driven — a tennis-in
 ## 🚀 Features & Functionalities
 
 ### 🧍 Players
-- Create, list, update, delete players  
-- `handedness` (LEFT / RIGHT)  
-- Soft delete planned  
-- Timestamps (`created_at`, `updated_at` planned)
+- Create, list, update, delete players
 
 ### 🏟️ Clubs
 - Create, list, update, delete clubs  
-- Contains name, city, country  
-- Soft delete planned
+- Contains name, city, country
 
 ### 🎾 Matches
 - Create matches between two players  
@@ -27,9 +23,6 @@ This project is intentionally domain-rich and personality-driven — a tennis-in
   - `IN_PROGRESS`
   - `COMPLETED`
   - `CANCELLED`
-- Final score & winner required only when match is **COMPLETED**  
-- Automatic timestamps for start/end  
-- Lazy-loaded associations solved via **Query Services + DTOs**
 
 ---
 
@@ -42,21 +35,70 @@ The project follows a Clean(ish) Hexagonal / Layered Architecture to separate co
 │       Controller        │  (REST Layer)
 └─────────────────────────┘
            ↓ DTOs
-┌─────────────────────────┐
-│    Application Layer    │  (Query services, mapping)
-└─────────────────────────┘
+┌──────────────────────────────────────────────┐
+│              Application Layer               │
+│  - MatchCommandService                       │
+│  - MatchQueryService                         │
+│  - CoachingService        (uses analytics +  │
+│                            rule engine)      │
+│  - RankingService         (uses Redis cache) │
+└──────────────────────────────────────────────┘
            ↓ business flow
 ┌─────────────────────────┐
-│     Domain Services     │  (Business rules)
+│     Domain Services     │  (business rules for
+│   (match logic, etc.)   │   creation/result) 
 └─────────────────────────┘
-           ↓ persistence
-┌─────────────────────────┐
-│       Repositories      │  (Spring Data JPA)
-└─────────────────────────┘
-           ↓
-┌─────────────────────────┐
-│       PostgreSQL        │
-└─────────────────────────┘
+           ↓ persistence (core)
+┌───────────────────────────────┐
+│      Repository / Infra       │
+│                               │
+│  ┌─────────────────────────┐  │
+│  │   JPA Repositories      │──┼──► PostgreSQL
+│  │  (Players, Matches,     │  │   Core source of truth
+│  │   Clubs, etc.)          │  │
+│  └─────────────────────────┘  │
+│                               │
+│  ┌─────────────────────────┐  │
+│  │   Redis Cache Adapter   │──┼──► Redis
+│  │  - Player rankings      │  │   (fast global reads)
+│  │  - Global stats         │  │
+│  └─────────────────────────┘  │
+│                               │
+│  ┌─────────────────────────┐  │
+│  │    SQS Publisher        │──┼──► SQS
+│  │  - MatchCreated         │  │   (domain events)
+│  │  - MatchCompleted       │  │
+│  └─────────────────────────┘  │
+└───────────────────────────────┘
+
+         ▲                                     
+         │ SQS events                          
+┌──────────────────────────────────────────────┐
+│        Analytics / Coaching Side             │
+│                                              │
+│  ┌───────────────────────────────────────┐   │
+│  │          SQS Consumers / Workers      │   │
+│  │  - listen to Match events             │   │
+│  │  - compute / update analytics         │   │
+│  │  - write per-player/per-match stats   │   │
+│  └───────────────────────────────────────┘   │
+│                  ↓                           │
+│  ┌─────────────────────────┐                 │
+│  │   Analytics Repository  │──► MongoDB      │
+│  │  - per-player metrics   │   (NoSQL        │
+│  │  - per-match metrics    │    analytics)   │
+│  └─────────────────────────┘                 │
+│                  ↓                           │
+│  ┌─────────────────────────┐                 │
+│  │   Rule Engine           │                 │
+│  │  - applies thresholds   │                 │
+│  │  - derives coaching     │                 │
+│  │    tips from Mongo data │                 │
+│  └─────────────────────────┘                 │
+│                  ↑                           │
+│        CoachingService (Application Layer)   │
+└──────────────────────────────────────────────┘
+
 ```
 
 ### Architectural Choices
@@ -141,7 +183,7 @@ DELETE /api/clubs/{id}
 
 Located at:
 ```
-postman/tennis-pulse.postman_collection.json
+postman/TennisPulse.postman_collection.json
 ```
 
 ---
