@@ -10,19 +10,45 @@ This project is intentionally domain-rich and personality-driven — a tennis-in
 ## 🚀 Features & Functionalities
 
 ### 🧍 Players
-- Create, list, update, delete players
+- Create, list, update and delete players
+- (Future) Enriched with analytics data for personalized coaching tips
 
 ### 🏟️ Clubs
-- Create, list, update, delete clubs  
-- Contains name, city, country
+- Create, list, update and delete clubs
+- Store basic metadata like name, city and country
 
 ### 🎾 Matches
-- Create matches between two players  
+- Create matches between two players
 - Track lifecycle:
   - `SCHEDULED`
   - `IN_PROGRESS`
   - `COMPLETED`
   - `CANCELLED`
+- Update match status with winner and final score
+
+### 📊 Analytics & Coaching (MongoDB + Rule Engine)
+- Collect per-player and per-match metrics in a NoSQL store (MongoDB)
+- Apply a simple rule engine (threshold-based `if` rules) over analytics data
+- Expose **coaching tips** based on patterns, e.g.:
+  - Low 2nd serve points won
+  - High unforced errors on backhand
+  - Specific score patterns in tight sets
+
+### 📈 Rankings & Global Stats (Redis)
+- Use Redis to cache frequently accessed, global information:
+  - Player rankings
+  - Leaderboards
+  - Hot aggregated stats
+- Designed for **fast read access** from the API without hitting PostgreSQL/Mongo every time
+
+### 📬 Asynchronous Events & Integrations (SQS)
+- Publish domain events (e.g. `MatchCompleted`) to SQS
+- Background workers consume these events to:
+  - Update analytics documents in MongoDB
+  - Refresh rankings / global stats in Redis
+  - Enable future external integrations (notifications, reporting, etc.)
+
+
 
 ---
 
