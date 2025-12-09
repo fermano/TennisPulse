@@ -1,4 +1,4 @@
-package com.tennispulse.service;
+package com.tennispulse.service.analytics;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

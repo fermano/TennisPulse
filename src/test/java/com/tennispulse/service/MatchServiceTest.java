@@ -8,6 +8,7 @@ import com.tennispulse.domain.PlayerEntity;
 import com.tennispulse.repository.ClubRepository;
 import com.tennispulse.repository.MatchRepository;
 import com.tennispulse.repository.PlayerRepository;
+import com.tennispulse.service.analytics.SqsMatchEventPublisher;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

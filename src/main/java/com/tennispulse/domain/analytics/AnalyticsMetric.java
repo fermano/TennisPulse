@@ -1,0 +1,14 @@
+package com.tennispulse.domain.analytics;
+
+public enum AnalyticsMetric {
+    FIRST_SERVE_IN,
+    FIRST_SERVE_POINTS_WON,
+    SECOND_SERVE_POINTS_WON,
+    UNFORCED_ERRORS_FOREHAND,
+    UNFORCED_ERRORS_BACKHAND,
+    WINNERS,
+    BREAK_POINT_CONVERSION,
+    BREAK_POINTS_SAVED,
+    NET_POINTS_WON,
+    LONG_RALLY_WIN_RATE
+}

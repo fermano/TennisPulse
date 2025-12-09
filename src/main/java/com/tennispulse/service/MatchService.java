@@ -8,6 +8,7 @@ import com.tennispulse.domain.PlayerEntity;
 import com.tennispulse.repository.ClubRepository;
 import com.tennispulse.repository.MatchRepository;
 import com.tennispulse.repository.PlayerRepository;
+import com.tennispulse.service.analytics.SqsMatchEventPublisher;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

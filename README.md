@@ -3,8 +3,6 @@
 **Tennis Pulse** is a showcase project built using **Spring Boot**, demonstrating a clean and modern backend architecture for managing tennis players, clubs, and matches.
 It was designed to highlight professional development practices: REST API design, layered architecture, Flyway migrations, transactional domain logic, DTO mapping, containerized infrastructure, and future integration with NoSQL, caching, and AWS messaging.
 
-This project is intentionally domain-rich and personality-driven — a tennis-inspired system that goes beyond standard CRUD applications and demonstrates real-world engineering decisions.
-
 ---
 
 ## 🚀 Features & Functionalities

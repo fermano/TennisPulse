@@ -16,6 +16,21 @@ spring:
   application:
     name: tennis-pulse
 
+  cloud:
+    aws:
+      region:
+        static: us-east-1
+      credentials:
+        access-key: test
+        secret-key: test
+      sqs:
+        endpoint: http://localhost:4566
+        region: us-east-1
+
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/tennispulse
+
   datasource:
     url: jdbc:postgresql://localhost:5432/tennispulse
     username: tennis

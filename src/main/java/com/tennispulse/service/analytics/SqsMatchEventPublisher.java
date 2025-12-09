@@ -1,10 +1,11 @@
-package com.tennispulse.service;
+package com.tennispulse.service.analytics;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tennispulse.api.MatchController;
 import com.tennispulse.domain.MatchCompletedEvent;
 import com.tennispulse.domain.MatchEntity;
+import com.tennispulse.domain.analytics.PlayerStatsPayload;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -57,7 +58,7 @@ public class SqsMatchEventPublisher {
         }
     }
 
-    private MatchCompletedEvent.PlayerStatsPayload toPayload(MatchController.PlayerStatsRequest playerStatsRequest) {
-            return objectMapper.convertValue(playerStatsRequest, MatchCompletedEvent.PlayerStatsPayload.class);
+    private PlayerStatsPayload toPayload(MatchController.PlayerStatsRequest playerStatsRequest) {
+            return objectMapper.convertValue(playerStatsRequest, PlayerStatsPayload.class);
     }
 }
