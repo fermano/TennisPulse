@@ -9,7 +9,6 @@ import com.tennispulse.service.MatchQueryService;
 import com.tennispulse.service.MatchService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -159,12 +158,7 @@ class MatchControllerTest {
         updatedEntity.setWinner(winner);
         updatedEntity.setFinalScore("6-4 6-3");
 
-        when(matchService.updateStatus(
-                eq(matchId),
-                eq(MatchStatus.COMPLETED),
-                eq(winnerId),
-                eq("6-4 6-3")
-        )).thenReturn(updatedEntity);
+        when(matchService.updateStatus(matchId, request)).thenReturn(updatedEntity);
 
         when(matchQueryService.getById(matchId)).thenReturn(response);
 
@@ -178,7 +172,7 @@ class MatchControllerTest {
                 .andExpect(jsonPath("$.status", is("COMPLETED")));
 
         // optional but matches the test name: verify service was called correctly
-        verify(matchService).updateStatus(matchId, MatchStatus.COMPLETED, winnerId, "6-4 6-3");
+        verify(matchService).updateStatus(matchId, request);
     }
 
 }

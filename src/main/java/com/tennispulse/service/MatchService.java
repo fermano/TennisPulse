@@ -1,5 +1,6 @@
 package com.tennispulse.service;
 
+import com.tennispulse.api.MatchController;
 import com.tennispulse.domain.ClubEntity;
 import com.tennispulse.domain.MatchEntity;
 import com.tennispulse.domain.MatchStatus;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.time.Instant;
 import java.util.List;
@@ -21,6 +23,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class MatchService {
 
+    private final SqsMatchEventPublisher matchEventPublisher;
     private final MatchRepository matchRepository;
     private final PlayerRepository playerRepository;
     private final ClubRepository clubRepository;
@@ -60,13 +63,14 @@ public class MatchService {
     }
 
     @Transactional
-    public MatchEntity updateStatus(UUID id, MatchStatus status, UUID winnerId, String finalScore) {
+    public MatchEntity updateStatus(UUID id, MatchController.UpdateMatchStatusRequest updateMatchStatusRequest) {
         MatchEntity match = findById(id);
         MatchStatus oldStatus = match.getStatus();
 
-        log.info("Updating match status: id={}, from={}, to={}, winnerId={}, finalScore={}",
-                id, oldStatus, status, winnerId, finalScore);
+        log.info("Updating match status: id={}, updateMatchStatusRequest={}",
+                id, updateMatchStatusRequest);
 
+        MatchStatus status = updateMatchStatusRequest.getStatus();
         match.setStatus(status);
 
         if (status == MatchStatus.IN_PROGRESS && match.getStartTime() == null) {
@@ -74,8 +78,17 @@ public class MatchService {
         }
 
         if (status == MatchStatus.COMPLETED) {
+            UUID winnerId = updateMatchStatusRequest.getWinnerId();
+            String finalScore = updateMatchStatusRequest.getFinalScore();
             if (winnerId == null || finalScore == null || finalScore.isBlank()) {
                 throw new IllegalArgumentException("Winner and finalScore are required when completing a match.");
+            }
+
+            if (CollectionUtils.isEmpty(updateMatchStatusRequest.getPlayerStats())) {
+                log.warn("Match {} completed without stats payload", id);
+            } else {
+                List<MatchController.PlayerStatsRequest> playerStatsRequests = updateMatchStatusRequest.getPlayerStats();
+                matchEventPublisher.publishMatchCompleted(match, playerStatsRequests);
             }
 
             PlayerEntity winner = playerRepository.findById(winnerId)

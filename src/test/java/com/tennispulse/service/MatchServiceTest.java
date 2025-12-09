@@ -1,5 +1,6 @@
 package com.tennispulse.service;
 
+import com.tennispulse.api.MatchController;
 import com.tennispulse.domain.ClubEntity;
 import com.tennispulse.domain.MatchEntity;
 import com.tennispulse.domain.MatchStatus;
@@ -32,6 +33,9 @@ class MatchServiceTest {
 
     @Mock
     private ClubRepository clubRepository;
+
+    @Mock
+    private SqsMatchEventPublisher matchEventPublisher;
 
     @InjectMocks
     private MatchService matchService;
@@ -144,10 +148,13 @@ class MatchServiceTest {
                 .startTime(null)
                 .build();
 
+        MatchController.UpdateMatchStatusRequest request = new MatchController.UpdateMatchStatusRequest();
+        request.setStatus(MatchStatus.IN_PROGRESS);
+
         when(matchRepository.findById(id)).thenReturn(Optional.of(match));
         when(matchRepository.save(any(MatchEntity.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        MatchEntity result = matchService.updateStatus(id, MatchStatus.IN_PROGRESS, null, null);
+        MatchEntity result = matchService.updateStatus(id, request);
 
         assertEquals(MatchStatus.IN_PROGRESS, result.getStatus());
         assertNotNull(result.getStartTime());
@@ -165,8 +172,11 @@ class MatchServiceTest {
 
         when(matchRepository.findById(id)).thenReturn(Optional.of(match));
 
+        MatchController.UpdateMatchStatusRequest request = new MatchController.UpdateMatchStatusRequest();
+        request.setStatus(MatchStatus.COMPLETED);
+
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
-                () -> matchService.updateStatus(id, MatchStatus.COMPLETED, null, null));
+                () -> matchService.updateStatus(id, request));
 
         assertTrue(ex.getMessage().contains("Winner and finalScore are required"));
         verify(playerRepository, never()).findById(any());
@@ -192,7 +202,12 @@ class MatchServiceTest {
         when(playerRepository.findById(winnerId)).thenReturn(Optional.of(winner));
         when(matchRepository.save(any(MatchEntity.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        MatchEntity result = matchService.updateStatus(id, MatchStatus.COMPLETED, winnerId, "6-4 6-3");
+        MatchController.UpdateMatchStatusRequest request = new MatchController.UpdateMatchStatusRequest();
+        request.setWinnerId(winnerId);
+        request.setStatus(MatchStatus.COMPLETED);
+        request.setFinalScore("6-4 6-3");
+
+        MatchEntity result = matchService.updateStatus(id, request);
 
         assertEquals(MatchStatus.COMPLETED, result.getStatus());
         assertEquals(winner, result.getWinner());
@@ -200,6 +215,64 @@ class MatchServiceTest {
         assertNotNull(result.getEndTime());
         verify(matchRepository).save(match);
     }
+
+    @Test
+    void updateStatus_toCompletedWithStats_shouldPublishMatchCompletedEvent() {
+        UUID id = UUID.randomUUID();
+        UUID winnerId = UUID.randomUUID();
+
+        MatchEntity match = MatchEntity.builder()
+                .id(id)
+                .status(MatchStatus.IN_PROGRESS)
+                .startTime(Instant.now())
+                .build();
+
+        PlayerEntity winner = PlayerEntity.builder()
+                .id(winnerId)
+                .name("Winner")
+                .build();
+
+        when(matchRepository.findById(id)).thenReturn(Optional.of(match));
+        when(playerRepository.findById(winnerId)).thenReturn(Optional.of(winner));
+        when(matchRepository.save(any(MatchEntity.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+
+        // build player stats payload
+        MatchController.PlayerStatsRequest playerStatsRequest = new MatchController.PlayerStatsRequest();
+        playerStatsRequest.setPlayerId(winnerId);
+        playerStatsRequest.setFirstServeIn(65.0);
+        playerStatsRequest.setFirstServePointsWon(72.0);
+        playerStatsRequest.setSecondServePointsWon(50.0);
+        playerStatsRequest.setUnforcedErrorsForehand(5);
+        playerStatsRequest.setUnforcedErrorsBackhand(7);
+        playerStatsRequest.setWinners(20);
+        playerStatsRequest.setBreakPointConversion(40.0);
+        playerStatsRequest.setBreakPointsSaved(55.0);
+        playerStatsRequest.setNetPointsWon(60.0);
+        playerStatsRequest.setLongRallyWinRate(48.0);
+
+        List<MatchController.PlayerStatsRequest> statsList = List.of(playerStatsRequest);
+
+        MatchController.UpdateMatchStatusRequest request = new MatchController.UpdateMatchStatusRequest();
+        request.setWinnerId(winnerId);
+        request.setStatus(MatchStatus.COMPLETED);
+        request.setFinalScore("6-4 6-3");
+        request.setPlayerStats(statsList);
+
+        // when
+        MatchEntity result = matchService.updateStatus(id, request);
+
+        // then: domain changes
+        assertEquals(MatchStatus.COMPLETED, result.getStatus());
+        assertEquals(winner, result.getWinner());
+        assertEquals("6-4 6-3", result.getFinalScore());
+        assertNotNull(result.getEndTime());
+        verify(matchRepository).save(match);
+
+        // and: event published with stats
+        verify(matchEventPublisher).publishMatchCompleted(match, statsList);
+    }
+
 
     @Test
     void updateStatus_toCancelled_shouldClearWinnerAndFinalScoreAndSetEndTime() {
@@ -215,7 +288,10 @@ class MatchServiceTest {
         when(matchRepository.findById(id)).thenReturn(Optional.of(match));
         when(matchRepository.save(any(MatchEntity.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        MatchEntity result = matchService.updateStatus(id, MatchStatus.CANCELLED, null, null);
+        MatchController.UpdateMatchStatusRequest request = new MatchController.UpdateMatchStatusRequest();
+        request.setStatus(MatchStatus.CANCELLED);
+
+        MatchEntity result = matchService.updateStatus(id, request);
 
         assertEquals(MatchStatus.CANCELLED, result.getStatus());
         assertNull(result.getWinner());

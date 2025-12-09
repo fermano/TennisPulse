@@ -1,6 +1,17 @@
 server:
   port: 8080
 
+aws:
+  sqs:
+    endpoint: http://localhost:4566  # LocalStack edge port
+    region: us-east-1
+
+tennispulse:
+  sqs:
+    match-completed-queue-name: match-completed-queue
+    # This will be resolved to URL at startup:
+    match-completed-queue-url: ${AWS_SQS_MATCH_COMPLETED_URL:}
+
 spring:
   application:
     name: tennis-pulse

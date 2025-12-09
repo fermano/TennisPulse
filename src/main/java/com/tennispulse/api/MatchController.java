@@ -47,12 +47,7 @@ public class MatchController {
             @PathVariable UUID id,
             @RequestBody UpdateMatchStatusRequest request
     ) {
-        matchService.updateStatus(
-                id,
-                request.getStatus(),
-                request.getWinnerId(),
-                request.getFinalScore()
-        );
+        matchService.updateStatus(id, request);
 
         MatchResponse response = matchQueryService.getById(id);
         return ResponseEntity.ok(response);
@@ -76,6 +71,22 @@ public class MatchController {
         private MatchStatus status;
         private UUID winnerId;
         private String finalScore;
+        private List<PlayerStatsRequest> playerStats;
+    }
+
+    @Data
+    public static class PlayerStatsRequest {
+        private UUID playerId;
+        private Double firstServeIn;
+        private Double firstServePointsWon;
+        private Double secondServePointsWon;
+        private Integer unforcedErrorsForehand;
+        private Integer unforcedErrorsBackhand;
+        private Integer winners;
+        private Double breakPointConversion;
+        private Double breakPointsSaved;
+        private Double netPointsWon;
+        private Double longRallyWinRate;
     }
 
     public record MatchResponse(
