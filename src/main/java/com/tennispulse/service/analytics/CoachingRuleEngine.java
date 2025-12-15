@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public interface CoachingRuleEngine {
-    PlayerMatchCoachingAnalysis analyze(UUID matchId,
-                                        UUID playerId,
+    PlayerMatchCoachingAnalysis analyze(String matchId,
+                                        String playerId,
                                         Map<AnalyticsMetric, Double> rawMetrics);
 }

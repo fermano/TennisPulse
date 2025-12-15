@@ -1,4 +1,4 @@
-package com.tennispulse.domain.analytics.dto;
+package com.tennispulse.api.analytics.dto;
 
 import com.tennispulse.domain.analytics.AnalyticsMetric;
 

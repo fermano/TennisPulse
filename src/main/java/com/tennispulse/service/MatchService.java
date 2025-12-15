@@ -17,7 +17,6 @@ import org.springframework.util.CollectionUtils;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.UUID;
 
 @Slf4j
 @Service
@@ -30,7 +29,7 @@ public class MatchService {
     private final ClubRepository clubRepository;
 
     @Transactional
-    public MatchEntity create(UUID clubId, UUID player1Id, UUID player2Id) {
+    public MatchEntity create(String clubId, String player1Id, String player2Id) {
         ClubEntity club = clubRepository.findById(clubId)
                 .orElseThrow(() -> new IllegalArgumentException("Club not found: " + clubId));
 
@@ -58,13 +57,13 @@ public class MatchService {
         return matchRepository.findAll();
     }
 
-    public MatchEntity findById(UUID id) {
+    public MatchEntity findById(String id) {
         return matchRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Match not found: " + id));
     }
 
     @Transactional
-    public MatchEntity updateStatus(UUID id, MatchController.UpdateMatchStatusRequest updateMatchStatusRequest) {
+    public MatchEntity updateStatus(String id, MatchController.UpdateMatchStatusRequest updateMatchStatusRequest) {
         MatchEntity match = findById(id);
         MatchStatus oldStatus = match.getStatus();
 
@@ -79,7 +78,7 @@ public class MatchService {
         }
 
         if (status == MatchStatus.COMPLETED) {
-            UUID winnerId = updateMatchStatusRequest.getWinnerId();
+            String winnerId = updateMatchStatusRequest.getWinnerId();
             String finalScore = updateMatchStatusRequest.getFinalScore();
             if (winnerId == null || finalScore == null || finalScore.isBlank()) {
                 throw new IllegalArgumentException("Winner and finalScore are required when completing a match.");
@@ -114,7 +113,7 @@ public class MatchService {
         return saved;
     }
 
-    public void delete(UUID id) {
+    public void delete(String id) {
         matchRepository.deleteById(id);
         log.info("Match deleted: id={}", id);
     }

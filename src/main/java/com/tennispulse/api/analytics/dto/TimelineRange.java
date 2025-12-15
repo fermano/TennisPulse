@@ -1,4 +1,4 @@
-package com.tennispulse.domain.analytics;
+package com.tennispulse.api.analytics.dto;
 
 public enum TimelineRange {
     ALL_TIME,

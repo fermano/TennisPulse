@@ -38,13 +38,13 @@ public class MatchController {
     }
 
     @GetMapping("/{id}")
-    public MatchResponse get(@PathVariable UUID id) {
+    public MatchResponse get(@PathVariable String id) {
         return matchQueryService.getById(id);
     }
 
     @PutMapping("/{id}/status")
     public ResponseEntity<MatchResponse> updateStatus(
-            @PathVariable UUID id,
+            @PathVariable String id,
             @RequestBody UpdateMatchStatusRequest request
     ) {
         matchService.updateStatus(id, request);
@@ -55,28 +55,28 @@ public class MatchController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable UUID id) {
+    public void delete(@PathVariable String id) {
         matchService.delete(id);
     }
 
     @Data
     public static class CreateMatchRequest {
-        private UUID clubId;
-        private UUID player1Id;
-        private UUID player2Id;
+        private String clubId;
+        private String player1Id;
+        private String player2Id;
     }
 
     @Data
     public static class UpdateMatchStatusRequest {
         private MatchStatus status;
-        private UUID winnerId;
+        private String winnerId;
         private String finalScore;
         private List<PlayerStatsRequest> playerStats;
     }
 
     @Data
     public static class PlayerStatsRequest {
-        private UUID playerId;
+        private String playerId;
         private Double firstServeIn;
         private Double firstServePointsWon;
         private Double secondServePointsWon;
@@ -90,14 +90,14 @@ public class MatchController {
     }
 
     public record MatchResponse(
-            UUID id,
-            UUID clubId,
+            String id,
+            String clubId,
             String clubName,
-            UUID player1Id,
+            String player1Id,
             String player1Name,
-            UUID player2Id,
+            String player2Id,
             String player2Name,
-            UUID winnerId,
+            String winnerId,
             String winnerName,
             String finalScore,
             MatchStatus status,

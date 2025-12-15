@@ -17,8 +17,8 @@ import java.util.stream.Collectors;
 public class ThresholdBasedCoachingRuleEngine implements CoachingRuleEngine {
 
     @Override
-    public PlayerMatchCoachingAnalysis analyze(UUID matchId,
-                                               UUID playerId,
+    public PlayerMatchCoachingAnalysis analyze(String matchId,
+                                               String playerId,
                                                Map<AnalyticsMetric, Double> rawMetrics) {
 
         Map<AnalyticsMetric, MetricValue> classified = rawMetrics.entrySet().stream()

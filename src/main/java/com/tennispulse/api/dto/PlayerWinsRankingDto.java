@@ -1,4 +1,4 @@
-package com.tennispulse.api;
+package com.tennispulse.api.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,7 +8,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 public class PlayerWinsRankingDto {
-    private UUID playerId;
+    private String playerId;
     private String playerName;
     private long wins;
 }

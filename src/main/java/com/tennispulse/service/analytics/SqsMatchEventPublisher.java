@@ -32,7 +32,7 @@ public class SqsMatchEventPublisher {
         event.setMatchId(match.getId());
         event.setWinnerId(match.getWinner().getId());
         event.setFinalScore(match.getFinalScore());
-        event.setOccurredAt(Instant.now());
+        event.setCreatedAt(Instant.now());
 
         if (!CollectionUtils.isEmpty(playerStats)) {
             event.setPlayerStats(

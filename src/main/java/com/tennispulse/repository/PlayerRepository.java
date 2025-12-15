@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.UUID;
 import java.util.List;
 
-public interface PlayerRepository extends JpaRepository<PlayerEntity, UUID> {
+public interface PlayerRepository extends JpaRepository<PlayerEntity, String> {
     List<PlayerEntity> findByDeletedFalse();
 }

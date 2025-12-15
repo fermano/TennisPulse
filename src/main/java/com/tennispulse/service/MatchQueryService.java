@@ -18,7 +18,7 @@ public class MatchQueryService {
     private final MatchRepository matchRepository;
 
     @Transactional(readOnly = true)
-    public MatchController.MatchResponse getById(UUID id) {
+    public MatchController.MatchResponse getById(String id) {
         MatchEntity m = matchRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Match not found: " + id));
 

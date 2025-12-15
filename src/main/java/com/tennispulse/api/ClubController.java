@@ -29,18 +29,18 @@ public class ClubController {
     }
 
     @GetMapping("/{id}")
-    public ClubEntity get(@PathVariable UUID id) {
+    public ClubEntity get(@PathVariable String id) {
         return clubService.findById(id);
     }
 
     @PutMapping("/{id}")
-    public ClubEntity update(@PathVariable UUID id, @RequestBody ClubEntity club) {
+    public ClubEntity update(@PathVariable String id, @RequestBody ClubEntity club) {
         return clubService.update(id, club);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable UUID id) {
+    public void delete(@PathVariable String id) {
         clubService.delete(id);
     }
 }

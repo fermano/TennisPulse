@@ -28,12 +28,12 @@ public class PlayerService {
         return playerRepository.findByDeletedFalse();
     }
 
-    public PlayerEntity findById(UUID id) {
+    public PlayerEntity findById(String id) {
         return playerRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Player not found: " + id));
     }
 
-    public PlayerEntity update(UUID id, PlayerEntity updated) {
+    public PlayerEntity update(String id, PlayerEntity updated) {
         PlayerEntity existing = findById(id);
         existing.setName(updated.getName());
         existing.setHandedness(updated.getHandedness());
@@ -45,7 +45,7 @@ public class PlayerService {
     }
 
     // Soft delete
-    public void delete(UUID id) {
+    public void delete(String id) {
         PlayerEntity existing = findById(id);
 
         if (existing.isDeleted()) {

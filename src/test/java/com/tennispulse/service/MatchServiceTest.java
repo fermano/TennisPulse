@@ -43,9 +43,9 @@ class MatchServiceTest {
 
     @Test
     void create_shouldCreateMatchWithScheduledStatus() {
-        UUID clubId = UUID.randomUUID();
-        UUID p1Id = UUID.randomUUID();
-        UUID p2Id = UUID.randomUUID();
+        String clubId = UUID.randomUUID().toString();
+        String p1Id = UUID.randomUUID().toString();
+        String p2Id = UUID.randomUUID().toString();
 
         ClubEntity club = ClubEntity.builder().id(clubId).name("Club").build();
         PlayerEntity p1 = PlayerEntity.builder().id(p1Id).name("P1").build();
@@ -56,7 +56,7 @@ class MatchServiceTest {
         when(playerRepository.findById(p2Id)).thenReturn(Optional.of(p2));
 
         MatchEntity saved = MatchEntity.builder()
-                .id(UUID.randomUUID())
+                .id(UUID.randomUUID().toString())
                 .club(club)
                 .player1(p1)
                 .player2(p2)
@@ -74,9 +74,9 @@ class MatchServiceTest {
 
     @Test
     void create_shouldThrowWhenClubNotFound() {
-        UUID clubId = UUID.randomUUID();
-        UUID p1Id = UUID.randomUUID();
-        UUID p2Id = UUID.randomUUID();
+        String clubId = UUID.randomUUID().toString();
+        String p1Id = UUID.randomUUID().toString();
+        String p2Id = UUID.randomUUID().toString();
 
         when(clubRepository.findById(clubId)).thenReturn(Optional.empty());
 
@@ -90,9 +90,9 @@ class MatchServiceTest {
 
     @Test
     void create_shouldThrowWhenPlayer1NotFound() {
-        UUID clubId = UUID.randomUUID();
-        UUID p1Id = UUID.randomUUID();
-        UUID p2Id = UUID.randomUUID();
+        String clubId = UUID.randomUUID().toString();
+        String p1Id = UUID.randomUUID().toString();
+        String p2Id = UUID.randomUUID().toString();
 
         ClubEntity club = ClubEntity.builder().id(clubId).build();
         when(clubRepository.findById(clubId)).thenReturn(Optional.of(club));
@@ -108,8 +108,8 @@ class MatchServiceTest {
     @Test
     void findAll_shouldReturnAllMatches() {
         when(matchRepository.findAll()).thenReturn(List.of(
-                MatchEntity.builder().id(UUID.randomUUID()).build(),
-                MatchEntity.builder().id(UUID.randomUUID()).build()
+                MatchEntity.builder().id(UUID.randomUUID().toString()).build(),
+                MatchEntity.builder().id(UUID.randomUUID().toString()).build()
         ));
 
         List<MatchEntity> result = matchService.findAll();
@@ -120,7 +120,7 @@ class MatchServiceTest {
 
     @Test
     void findById_shouldReturnMatchWhenExists() {
-        UUID id = UUID.randomUUID();
+        String id = UUID.randomUUID().toString();
         MatchEntity match = MatchEntity.builder().id(id).build();
         when(matchRepository.findById(id)).thenReturn(Optional.of(match));
 
@@ -131,7 +131,7 @@ class MatchServiceTest {
 
     @Test
     void findById_shouldThrowWhenNotFound() {
-        UUID id = UUID.randomUUID();
+        String id = UUID.randomUUID().toString();
         when(matchRepository.findById(id)).thenReturn(Optional.empty());
 
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
@@ -142,7 +142,7 @@ class MatchServiceTest {
 
     @Test
     void updateStatus_toInProgress_shouldSetStartTime() {
-        UUID id = UUID.randomUUID();
+        String id = UUID.randomUUID().toString();
         MatchEntity match = MatchEntity.builder()
                 .id(id)
                 .status(MatchStatus.SCHEDULED)
@@ -164,7 +164,7 @@ class MatchServiceTest {
 
     @Test
     void updateStatus_toCompletedWithoutWinnerOrScore_shouldThrow() {
-        UUID id = UUID.randomUUID();
+        String id = UUID.randomUUID().toString();
         MatchEntity match = MatchEntity.builder()
                 .id(id)
                 .status(MatchStatus.IN_PROGRESS)
@@ -186,8 +186,8 @@ class MatchServiceTest {
 
     @Test
     void updateStatus_toCompleted_shouldSetWinnerFinalScoreAndEndTime() {
-        UUID id = UUID.randomUUID();
-        UUID winnerId = UUID.randomUUID();
+        String id = UUID.randomUUID().toString();
+        String winnerId = UUID.randomUUID().toString();
         MatchEntity match = MatchEntity.builder()
                 .id(id)
                 .status(MatchStatus.IN_PROGRESS)
@@ -219,8 +219,8 @@ class MatchServiceTest {
 
     @Test
     void updateStatus_toCompletedWithStats_shouldPublishMatchCompletedEvent() {
-        UUID id = UUID.randomUUID();
-        UUID winnerId = UUID.randomUUID();
+        String id = UUID.randomUUID().toString();
+        String winnerId = UUID.randomUUID().toString();
 
         MatchEntity match = MatchEntity.builder()
                 .id(id)
@@ -277,12 +277,12 @@ class MatchServiceTest {
 
     @Test
     void updateStatus_toCancelled_shouldClearWinnerAndFinalScoreAndSetEndTime() {
-        UUID id = UUID.randomUUID();
+        String id = UUID.randomUUID().toString();
         MatchEntity match = MatchEntity.builder()
                 .id(id)
                 .status(MatchStatus.IN_PROGRESS)
                 .startTime(Instant.now())
-                .winner(PlayerEntity.builder().id(UUID.randomUUID()).build())
+                .winner(PlayerEntity.builder().id(UUID.randomUUID().toString()).build())
                 .finalScore("6-4 6-3")
                 .build();
 
@@ -303,7 +303,7 @@ class MatchServiceTest {
 
     @Test
     void delete_shouldCallRepositoryDeleteById() {
-        UUID id = UUID.randomUUID();
+        String id = UUID.randomUUID().toString();
 
         matchService.delete(id);
 

@@ -30,13 +30,13 @@ class PlayerServiceTest {
     @Test
     void create_shouldSavePlayerAndReturnCreated() {
         PlayerEntity input = PlayerEntity.builder()
-                .id(UUID.randomUUID())
+                .id(UUID.randomUUID().toString())
                 .name("Alice")
                 .handedness(Handedness.RIGHT)
                 .build();
 
         PlayerEntity saved = PlayerEntity.builder()
-                .id(UUID.randomUUID())
+                .id(UUID.randomUUID().toString())
                 .name("Alice")
                 .handedness(Handedness.RIGHT)
                 .build();
@@ -56,8 +56,8 @@ class PlayerServiceTest {
 
     @Test
     void findAll_shouldReturnNonDeletedPlayers() {
-        PlayerEntity p1 = PlayerEntity.builder().id(UUID.randomUUID()).name("A").build();
-        PlayerEntity p2 = PlayerEntity.builder().id(UUID.randomUUID()).name("B").build();
+        PlayerEntity p1 = PlayerEntity.builder().id(UUID.randomUUID().toString()).name("A").build();
+        PlayerEntity p2 = PlayerEntity.builder().id(UUID.randomUUID().toString()).name("B").build();
 
         when(playerRepository.findByDeletedFalse()).thenReturn(List.of(p1, p2));
 
@@ -69,7 +69,7 @@ class PlayerServiceTest {
 
     @Test
     void findById_shouldReturnPlayerWhenExists() {
-        UUID id = UUID.randomUUID();
+        String id = UUID.randomUUID().toString();
         PlayerEntity p = PlayerEntity.builder().id(id).name("Alice").build();
 
         when(playerRepository.findById(id)).thenReturn(Optional.of(p));
@@ -82,7 +82,7 @@ class PlayerServiceTest {
 
     @Test
     void findById_shouldThrowWhenNotFound() {
-        UUID id = UUID.randomUUID();
+        String id = UUID.randomUUID().toString();
         when(playerRepository.findById(id)).thenReturn(Optional.empty());
 
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
@@ -93,7 +93,7 @@ class PlayerServiceTest {
 
     @Test
     void update_shouldUpdateFieldsAndSave() {
-        UUID id = UUID.randomUUID();
+        String id = UUID.randomUUID().toString();
         PlayerEntity existing = PlayerEntity.builder()
                 .id(id)
                 .name("Old Name")
@@ -117,7 +117,7 @@ class PlayerServiceTest {
 
     @Test
     void delete_shouldSoftDeleteWhenNotDeleted() {
-        UUID id = UUID.randomUUID();
+        String id = UUID.randomUUID().toString();
         PlayerEntity existing = PlayerEntity.builder()
                 .id(id)
                 .name("Alice")
@@ -139,7 +139,7 @@ class PlayerServiceTest {
 
     @Test
     void delete_shouldNotSaveWhenAlreadyDeleted() {
-        UUID id = UUID.randomUUID();
+        String id = UUID.randomUUID().toString();
         PlayerEntity existing = PlayerEntity.builder()
                 .id(id)
                 .name("Already deleted")

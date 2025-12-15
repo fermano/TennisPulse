@@ -1,12 +1,12 @@
 CREATE TABLE player (
-    id          UUID PRIMARY KEY,
+    id          VARCHAR(255) PRIMARY KEY,
     name        VARCHAR(255) NOT NULL,
     handedness  VARCHAR(16),              -- LEFT / RIGHT (Handedness enum)
     created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE club (
-    id               UUID PRIMARY KEY,
+    id               VARCHAR(255) PRIMARY KEY,
     name             VARCHAR(255) NOT NULL,
     city             VARCHAR(255),
     country          VARCHAR(255),

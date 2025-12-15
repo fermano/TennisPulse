@@ -31,11 +31,11 @@ class MatchQueryServiceTest {
 
     @Test
     void listAll_shouldMapEntitiesToResponses() {
-        UUID matchId = UUID.randomUUID();
-        UUID clubId = UUID.randomUUID();
-        UUID p1Id = UUID.randomUUID();
-        UUID p2Id = UUID.randomUUID();
-        UUID winnerId = p1Id;
+        String matchId = UUID.randomUUID().toString();
+        String clubId = UUID.randomUUID().toString();
+        String p1Id = UUID.randomUUID().toString();
+        String p2Id = UUID.randomUUID().toString();
+        String winnerId = p1Id;
 
         ClubEntity club = ClubEntity.builder()
                 .id(clubId)
@@ -88,9 +88,9 @@ class MatchQueryServiceTest {
 
     @Test
     void listAll_shouldHandleNullClubAndNullWinner() {
-        UUID matchId = UUID.randomUUID();
-        UUID p1Id = UUID.randomUUID();
-        UUID p2Id = UUID.randomUUID();
+        String matchId = UUID.randomUUID().toString();
+        String p1Id = UUID.randomUUID().toString();
+        String p2Id = UUID.randomUUID().toString();
 
         PlayerEntity p1 = PlayerEntity.builder()
                 .id(p1Id)
@@ -129,9 +129,9 @@ class MatchQueryServiceTest {
 
     @Test
     void getById_shouldReturnMappedResponseWhenFound() {
-        UUID matchId = UUID.randomUUID();
-        UUID p1Id = UUID.randomUUID();
-        UUID p2Id = UUID.randomUUID();
+        String matchId = UUID.randomUUID().toString();
+        String p1Id = UUID.randomUUID().toString();
+        String p2Id = UUID.randomUUID().toString();
 
         PlayerEntity p1 = PlayerEntity.builder()
                 .id(p1Id)
@@ -162,7 +162,7 @@ class MatchQueryServiceTest {
 
     @Test
     void getById_shouldThrowWhenNotFound() {
-        UUID matchId = UUID.randomUUID();
+        String matchId = UUID.randomUUID().toString();
         when(matchRepository.findById(matchId)).thenReturn(Optional.empty());
 
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,

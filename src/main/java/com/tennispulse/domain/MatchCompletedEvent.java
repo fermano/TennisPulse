@@ -9,9 +9,9 @@ import java.util.UUID;
 
 @Data
 public class MatchCompletedEvent {
-    private UUID matchId;
-    private UUID winnerId;
+    private String matchId;
+    private String winnerId;
     private String finalScore;
-    private Instant occurredAt;
+    private Instant createdAt;
     private List<PlayerStatsPayload> playerStats;
 }

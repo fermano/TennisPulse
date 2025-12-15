@@ -16,7 +16,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
-import java.util.UUID;
 
 @Entity
 @Table(name = "player")
@@ -28,7 +27,7 @@ public class PlayerEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    private String id;
 
     private String name;
 

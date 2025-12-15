@@ -43,9 +43,9 @@ class MatchCompletedSqsConsumerTest {
 
     @Test
     void handleMessage_happyPath_shouldAnalyzeAndPersistOneDocumentPerPlayer() throws Exception {
-        UUID matchId = UUID.randomUUID();
-        UUID player1Id = UUID.randomUUID();
-        UUID player2Id = UUID.randomUUID();
+        String matchId = UUID.randomUUID().toString();
+        String player1Id = UUID.randomUUID().toString();
+        String player2Id = UUID.randomUUID().toString();
 
         // Build two player stats payloads
         PlayerStatsPayload stats1 = new PlayerStatsPayload();
@@ -140,7 +140,7 @@ class MatchCompletedSqsConsumerTest {
 
     @Test
     void handleMessage_whenEventHasNoPlayerStats_shouldSkipAnalytics() throws Exception {
-        UUID matchId = UUID.randomUUID();
+        String matchId = UUID.randomUUID().toString();
 
         MatchCompletedEvent event = new MatchCompletedEvent();
         event.setMatchId(matchId);

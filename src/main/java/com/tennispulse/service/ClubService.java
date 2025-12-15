@@ -28,12 +28,12 @@ public class ClubService {
         return clubRepository.findByDeletedFalse();
     }
 
-    public ClubEntity findById(UUID id) {
+    public ClubEntity findById(String id) {
         return clubRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Club not found: " + id));
     }
 
-    public ClubEntity update(UUID id, ClubEntity updated) {
+    public ClubEntity update(String id, ClubEntity updated) {
         ClubEntity existing = findById(id);
         existing.setName(updated.getName());
         existing.setCity(updated.getCity());
@@ -45,7 +45,7 @@ public class ClubService {
         return saved;
     }
 
-    public void delete(UUID id) {
+    public void delete(String id) {
         ClubEntity existing = findById(id);
 
         if (existing.isDeleted()) {

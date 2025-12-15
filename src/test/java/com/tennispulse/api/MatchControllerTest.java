@@ -49,10 +49,10 @@ class MatchControllerTest {
 
     @Test
     void list_shouldReturnListOfMatches() throws Exception {
-        UUID matchId = UUID.randomUUID();
-        UUID clubId = UUID.randomUUID();
-        UUID p1Id = UUID.randomUUID();
-        UUID p2Id = UUID.randomUUID();
+        String matchId = UUID.randomUUID().toString();
+        String clubId = UUID.randomUUID().toString();
+        String p1Id = UUID.randomUUID().toString();
+        String p2Id = UUID.randomUUID().toString();
 
         MatchController.MatchResponse response = new MatchController.MatchResponse(
                 matchId,
@@ -86,9 +86,9 @@ class MatchControllerTest {
 
     @Test
     void get_shouldReturnSingleMatch() throws Exception {
-        UUID matchId = UUID.randomUUID();
-        UUID p1Id = UUID.randomUUID();
-        UUID p2Id = UUID.randomUUID();
+        String matchId = UUID.randomUUID().toString();
+        String p1Id = UUID.randomUUID().toString();
+        String p2Id = UUID.randomUUID().toString();
 
         MatchController.MatchResponse response = new MatchController.MatchResponse(
                 matchId,
@@ -120,8 +120,8 @@ class MatchControllerTest {
 
     @Test
     void updateStatus_shouldCallServiceAndReturnUpdatedMatch() throws Exception {
-        UUID matchId = UUID.randomUUID();
-        UUID winnerId = UUID.randomUUID();
+        String matchId = UUID.randomUUID().toString();
+        String winnerId = UUID.randomUUID().toString();
 
         MatchController.UpdateMatchStatusRequest request = new MatchController.UpdateMatchStatusRequest();
         request.setStatus(MatchStatus.COMPLETED);
@@ -132,9 +132,9 @@ class MatchControllerTest {
                 matchId,
                 null,
                 null,
-                UUID.randomUUID(),
+                UUID.randomUUID().toString(),
                 "Alice",
-                UUID.randomUUID(),
+                UUID.randomUUID().toString(),
                 "Bruno",
                 winnerId,
                 "Alice",
@@ -151,7 +151,7 @@ class MatchControllerTest {
         updatedEntity.setId(matchId);
         updatedEntity.setStatus(MatchStatus.COMPLETED);
         PlayerEntity winner = PlayerEntity.builder()
-                .id(UUID.randomUUID())
+                .id(UUID.randomUUID().toString())
                 .name("Alice")
                 .handedness(Handedness.RIGHT)
                 .build();

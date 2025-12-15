@@ -15,8 +15,8 @@ class ThresholdBasedCoachingRuleEngineTest {
 
     @Test
     void analyze_firstServeIn_boundaries_shouldClassifyCorrectly() {
-        UUID matchId = UUID.randomUUID();
-        UUID playerId = UUID.randomUUID();
+        String matchId = UUID.randomUUID().toString();
+        String playerId = UUID.randomUUID().toString();
 
         // < 50 => CRITICAL
         var resultCritical = engine.analyze(
@@ -65,8 +65,8 @@ class ThresholdBasedCoachingRuleEngineTest {
 
     @Test
     void analyze_twoCriticalMetrics_shouldReturnAtRisk() {
-        UUID matchId = UUID.randomUUID();
-        UUID playerId = UUID.randomUUID();
+        String matchId = UUID.randomUUID().toString();
+        String playerId = UUID.randomUUID().toString();
 
         // FIRST_SERVE_IN < 50 => CRITICAL
         // SECOND_SERVE_POINTS_WON < 40 => CRITICAL
@@ -99,8 +99,8 @@ class ThresholdBasedCoachingRuleEngineTest {
 
     @Test
     void analyze_warningOnly_shouldReturnNeedsFocus() {
-        UUID matchId = UUID.randomUUID();
-        UUID playerId = UUID.randomUUID();
+        String matchId = UUID.randomUUID().toString();
+        String playerId = UUID.randomUUID().toString();
 
         // FIRST_SERVE_IN in WARNING zone (50–59)
         // BREAK_POINT_CONVERSION also WARNING (25–39)
@@ -125,8 +125,8 @@ class ThresholdBasedCoachingRuleEngineTest {
 
     @Test
     void analyze_goodProfile_shouldReturnOnTrackAndFewTips() {
-        UUID matchId = UUID.randomUUID();
-        UUID playerId = UUID.randomUUID();
+        String matchId = UUID.randomUUID().toString();
+        String playerId = UUID.randomUUID().toString();
 
         Map<AnalyticsMetric, Double> raw = Map.of(
                 AnalyticsMetric.FIRST_SERVE_IN, 68.0,               // GOOD

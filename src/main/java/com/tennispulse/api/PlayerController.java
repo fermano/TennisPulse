@@ -29,18 +29,18 @@ public class PlayerController {
     }
 
     @GetMapping("/{id}")
-    public PlayerEntity get(@PathVariable UUID id) {
+    public PlayerEntity get(@PathVariable String id) {
         return playerService.findById(id);
     }
 
     @PutMapping("/{id}")
-    public PlayerEntity update(@PathVariable UUID id, @RequestBody PlayerEntity player) {
+    public PlayerEntity update(@PathVariable String id, @RequestBody PlayerEntity player) {
         return playerService.update(id, player);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable UUID id) {
+    public void delete(@PathVariable String id) {
         playerService.delete(id);
     }
 }

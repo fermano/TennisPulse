@@ -1,7 +1,6 @@
-package com.tennispulse.domain.analytics.dto;
+package com.tennispulse.api.analytics.dto;
 
 import com.tennispulse.domain.analytics.AnalyticsMetric;
-import com.tennispulse.domain.analytics.TimelineRange;
 
 import java.util.List;
 import java.util.Map;

@@ -44,8 +44,8 @@ class SqsMatchEventPublisherTest {
     @Test
     void publishMatchCompleted_happyPath_shouldSerializeAndSendToSqs() throws Exception {
         // given
-        UUID matchId = UUID.randomUUID();
-        UUID winnerId = UUID.randomUUID();
+        String matchId = UUID.randomUUID().toString();
+        String winnerId = UUID.randomUUID().toString();
 
         MatchEntity match = mock(MatchEntity.class);
         PlayerEntity winner = mock(PlayerEntity.class);
@@ -56,7 +56,7 @@ class SqsMatchEventPublisherTest {
         when(match.getFinalScore()).thenReturn("6-4 6-3");
 
         MatchController.PlayerStatsRequest statsRequest = new MatchController.PlayerStatsRequest();
-        statsRequest.setPlayerId(UUID.randomUUID());
+        statsRequest.setPlayerId(UUID.randomUUID().toString());
         // you can fill other fields if you want, but it's not required for this test
 
         List<MatchController.PlayerStatsRequest> stats = List.of(statsRequest);
@@ -83,8 +83,8 @@ class SqsMatchEventPublisherTest {
     @Test
     void publishMatchCompleted_whenSerializationFails_shouldNotSendMessage() throws Exception {
         // given
-        UUID matchId = UUID.randomUUID();
-        UUID winnerId = UUID.randomUUID();
+        String matchId = UUID.randomUUID().toString();
+        String winnerId = UUID.randomUUID().toString();
 
         MatchEntity match = mock(MatchEntity.class);
         PlayerEntity winner = mock(PlayerEntity.class);

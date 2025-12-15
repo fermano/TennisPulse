@@ -2,12 +2,9 @@ package com.tennispulse.domain.analytics;
 
 import lombok.Data;
 
-import java.util.UUID;
-
 @Data
 public class PlayerStatsPayload {
-    private UUID playerId;
-
+    private String playerId;
     private Double firstServeIn;
     private Double firstServePointsWon;
     private Double secondServePointsWon;

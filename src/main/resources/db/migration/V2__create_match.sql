@@ -1,11 +1,11 @@
 -- Match table with FKs to player and club
 
 CREATE TABLE match (
-    id          UUID PRIMARY KEY,
-    club_id     UUID,
-    player1_id  UUID NOT NULL,
-    player2_id  UUID NOT NULL,
-    winner_id   UUID,
+    id          VARCHAR(255) PRIMARY KEY,
+    club_id     VARCHAR(255),
+    player1_id  VARCHAR(255) NOT NULL,
+    player2_id  VARCHAR(255) NOT NULL,
+    winner_id   VARCHAR(255),
     final_score  VARCHAR(64),
     start_time  TIMESTAMPTZ,
     end_time    TIMESTAMPTZ,

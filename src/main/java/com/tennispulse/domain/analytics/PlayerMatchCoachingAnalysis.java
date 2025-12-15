@@ -10,8 +10,8 @@ import java.util.UUID;
 @Data
 public class PlayerMatchCoachingAnalysis {
 
-    private UUID matchId;
-    private UUID playerId;
+    private String matchId;
+    private String playerId;
     private CoachingStatus coachingStatus;
     private Map<AnalyticsMetric, MetricValue> metrics;
     private List<CoachingTip> tips;
@@ -19,8 +19,8 @@ public class PlayerMatchCoachingAnalysis {
     private Instant createdAt;
 
     public PlayerMatchCoachingAnalysis(
-            UUID matchId,
-            UUID playerId,
+            String matchId,
+            String playerId,
             CoachingStatus coachingStatus,
             Map<AnalyticsMetric, MetricValue> metrics,
             List<CoachingTip> tips

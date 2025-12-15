@@ -29,14 +29,14 @@ class ClubServiceTest {
     @Test
     void create_shouldSaveClubAndReturnCreated() {
         ClubEntity input = ClubEntity.builder()
-                .id(UUID.randomUUID())
+                .id(UUID.randomUUID().toString())
                 .name("Green Valley")
                 .city("Austin")
                 .country("USA")
                 .build();
 
         ClubEntity saved = ClubEntity.builder()
-                .id(UUID.randomUUID())
+                .id(UUID.randomUUID().toString())
                 .name("Green Valley")
                 .city("Austin")
                 .country("USA")
@@ -56,8 +56,8 @@ class ClubServiceTest {
 
     @Test
     void findAll_shouldReturnNonDeletedClubs() {
-        ClubEntity c1 = ClubEntity.builder().id(UUID.randomUUID()).name("A").build();
-        ClubEntity c2 = ClubEntity.builder().id(UUID.randomUUID()).name("B").build();
+        ClubEntity c1 = ClubEntity.builder().id(UUID.randomUUID().toString()).name("A").build();
+        ClubEntity c2 = ClubEntity.builder().id(UUID.randomUUID().toString()).name("B").build();
 
         when(clubRepository.findByDeletedFalse()).thenReturn(List.of(c1, c2));
 
@@ -69,7 +69,7 @@ class ClubServiceTest {
 
     @Test
     void findById_shouldReturnClubWhenExists() {
-        UUID id = UUID.randomUUID();
+        String id = UUID.randomUUID().toString();
         ClubEntity c = ClubEntity.builder().id(id).name("Club").build();
 
         when(clubRepository.findById(id)).thenReturn(Optional.of(c));
@@ -81,7 +81,7 @@ class ClubServiceTest {
 
     @Test
     void findById_shouldThrowWhenNotFound() {
-        UUID id = UUID.randomUUID();
+        String id = UUID.randomUUID().toString();
         when(clubRepository.findById(id)).thenReturn(Optional.empty());
 
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
@@ -92,7 +92,7 @@ class ClubServiceTest {
 
     @Test
     void update_shouldUpdateFieldsAndSave() {
-        UUID id = UUID.randomUUID();
+        String id = UUID.randomUUID().toString();
         ClubEntity existing = ClubEntity.builder()
                 .id(id)
                 .name("Old")
@@ -119,7 +119,7 @@ class ClubServiceTest {
 
     @Test
     void delete_shouldSoftDeleteWhenNotDeleted() {
-        UUID id = UUID.randomUUID();
+        String id = UUID.randomUUID().toString();
         ClubEntity existing = ClubEntity.builder()
                 .id(id)
                 .name("Club")
@@ -143,7 +143,7 @@ class ClubServiceTest {
 
     @Test
     void delete_shouldNotSaveWhenAlreadyDeleted() {
-        UUID id = UUID.randomUUID();
+        String id = UUID.randomUUID().toString();
         ClubEntity existing = ClubEntity.builder()
                 .id(id)
                 .name("Deleted")
