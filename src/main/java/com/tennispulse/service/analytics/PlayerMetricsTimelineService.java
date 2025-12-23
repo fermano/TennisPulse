@@ -67,6 +67,7 @@ public class PlayerMetricsTimelineService {
 
         List<PlayerMonthlyMetricsDto> timeline = results.stream()
                 .map(this::toMonthlyDto)
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
 
         Map<AnalyticsMetric, Double> overallAverages = computeOverallAverages(timeline);
