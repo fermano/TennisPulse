@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "532aba91-efc8-4a4f-bf2b-d443547f06e1",
+		"_postman_id": "f4920c95-8462-45a0-a92b-b0172ffd335c",
 		"name": "TennisPulse",
 		"description": "CRUD operations for Player, Club and Match entities on local Spring Boot backend (http://localhost:8080).",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
@@ -413,84 +413,6 @@
 			"name": "Rankings",
 			"item": [
 				{
-					"name": "Overall Ranking - All Time",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/api/rankings/overall/all-time?limit=10",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"rankings",
-								"overall",
-								"all-time"
-							],
-							"query": [
-								{
-									"key": "limit",
-									"value": "10"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Overall Ranking - Current Year",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/api/rankings/overall/current-year?limit=10",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"rankings",
-								"overall",
-								"current-year"
-							],
-							"query": [
-								{
-									"key": "limit",
-									"value": "10"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Overall Ranking - Current Month",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/api/rankings/overall/current-month?limit=10",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"rankings",
-								"overall",
-								"current-month"
-							],
-							"query": [
-								{
-									"key": "limit",
-									"value": "10"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "Wins Ranking - Current Year",
 					"request": {
 						"method": "GET",
@@ -554,8 +476,16 @@
 						"header": [],
 						"url": {
 							"raw": "{{baseUrl}}/api/analytics/player/:playerId/timeline?range=ALL_TIME",
-							"host": ["{{baseUrl}}"],
-							"path": ["api", "analytics", "player", ":playerId", "timeline"],
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"analytics",
+								"player",
+								":playerId",
+								"timeline"
+							],
 							"query": [
 								{
 									"key": "range",
@@ -579,8 +509,16 @@
 						"header": [],
 						"url": {
 							"raw": "{{baseUrl}}/api/analytics/player/:playerId/timeline?range=LAST_MONTH",
-							"host": ["{{baseUrl}}"],
-							"path": ["api", "analytics", "player", ":playerId", "timeline"],
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"analytics",
+								"player",
+								":playerId",
+								"timeline"
+							],
 							"query": [
 								{
 									"key": "range",
@@ -604,8 +542,16 @@
 						"header": [],
 						"url": {
 							"raw": "{{baseUrl}}/api/analytics/player/:playerId/timeline?range=LAST_6_MONTHS",
-							"host": ["{{baseUrl}}"],
-							"path": ["api", "analytics", "player", ":playerId", "timeline"],
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"analytics",
+								"player",
+								":playerId",
+								"timeline"
+							],
 							"query": [
 								{
 									"key": "range",
@@ -629,8 +575,16 @@
 						"header": [],
 						"url": {
 							"raw": "{{baseUrl}}/api/analytics/player/:playerId/timeline?range=LAST_12_MONTHS",
-							"host": ["{{baseUrl}}"],
-							"path": ["api", "analytics", "player", ":playerId", "timeline"],
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"analytics",
+								"player",
+								":playerId",
+								"timeline"
+							],
 							"query": [
 								{
 									"key": "range",
@@ -654,8 +608,16 @@
 						"header": [],
 						"url": {
 							"raw": "{{baseUrl}}/api/analytics/player/:playerId/timeline?range=YEAR_TO_DATE",
-							"host": ["{{baseUrl}}"],
-							"path": ["api", "analytics", "player", ":playerId", "timeline"],
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"analytics",
+								"player",
+								":playerId",
+								"timeline"
+							],
 							"query": [
 								{
 									"key": "range",
@@ -673,8 +635,112 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Highlights",
+			"item": [
+				{
+					"name": "Highlights - All Time",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/analytics/highlights/ALL_TIME",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"analytics",
+								"highlights",
+								"ALL_TIME"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Highlights - Last Month",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/analytics/highlights/LAST_MONTH",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"analytics",
+								"highlights",
+								"LAST_MONTH"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Highlights - Last 6 Months",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/analytics/highlights/LAST_6_MONTHS",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"analytics",
+								"highlights",
+								"LAST_6_MONTHS"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Highlights - Last 12 Months",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/analytics/highlights/LAST_12_MONTHS",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"analytics",
+								"highlights",
+								"LAST_12_MONTHS"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Highlights - Year To Date",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/analytics/highlights/YEAR_TO_DATE",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"analytics",
+								"highlights",
+								"YEAR_TO_DATE"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
-
 	],
 	"variable": [
 		{

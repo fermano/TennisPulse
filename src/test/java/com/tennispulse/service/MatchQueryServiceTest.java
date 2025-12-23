@@ -1,6 +1,6 @@
 package com.tennispulse.service;
 
-import com.tennispulse.api.MatchController;
+import com.tennispulse.api.controllers.MatchController;
 import com.tennispulse.domain.ClubEntity;
 import com.tennispulse.domain.MatchEntity;
 import com.tennispulse.domain.MatchStatus;

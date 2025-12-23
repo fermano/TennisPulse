@@ -1,4 +1,4 @@
-package com.tennispulse.api;
+package com.tennispulse.api.controllers;
 
 import com.tennispulse.domain.MatchEntity;
 import com.tennispulse.domain.MatchStatus;
@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/matches")

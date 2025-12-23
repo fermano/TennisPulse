@@ -1,6 +1,6 @@
 package com.tennispulse.service;
 
-import com.tennispulse.api.MatchController;
+import com.tennispulse.api.controllers.MatchController;
 import com.tennispulse.domain.MatchEntity;
 import com.tennispulse.domain.PlayerEntity;
 import com.tennispulse.repository.MatchRepository;
@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor

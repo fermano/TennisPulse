@@ -1,6 +1,7 @@
 package com.tennispulse.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tennispulse.api.controllers.MatchController;
 import com.tennispulse.domain.Handedness;
 import com.tennispulse.domain.MatchEntity;
 import com.tennispulse.domain.MatchStatus;
@@ -24,7 +25,6 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;

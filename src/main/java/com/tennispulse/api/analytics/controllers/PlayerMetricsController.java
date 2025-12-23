@@ -1,4 +1,4 @@
-package com.tennispulse.api.analytics;
+package com.tennispulse.api.analytics.controllers;
 
 import com.tennispulse.api.analytics.dto.PlayerMetricsTimelineResponseDto;
 import com.tennispulse.api.analytics.dto.TimelineRange;

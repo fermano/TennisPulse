@@ -2,7 +2,7 @@ package com.tennispulse.service.analytics;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tennispulse.api.MatchController;
+import com.tennispulse.api.controllers.MatchController;
 import com.tennispulse.domain.MatchCompletedEvent;
 import com.tennispulse.domain.MatchEntity;
 import com.tennispulse.domain.analytics.PlayerStatsPayload;

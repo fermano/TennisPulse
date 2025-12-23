@@ -1,4 +1,4 @@
-package com.tennispulse.api;
+package com.tennispulse.api.controllers;
 
 import com.tennispulse.domain.PlayerEntity;
 import com.tennispulse.service.PlayerService;
@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/players")

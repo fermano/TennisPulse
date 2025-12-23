@@ -78,7 +78,7 @@ class MatchCompletedSqsConsumerTest {
         event.setMatchId(matchId);
         event.setWinnerId(player1Id);
         event.setFinalScore("6-4 6-3");
-        event.setOccurredAt(Instant.now());
+        event.setCreatedAt(Instant.now());
         event.setPlayerStats(List.of(stats1, stats2));
 
         // ObjectMapper should deserialize the message body into our event
