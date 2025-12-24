@@ -78,27 +78,6 @@ App default:
 
 ---
 
-## API Documentation (Swagger / OpenAPI)
-
-This project is intended to expose an OpenAPI/Swagger UI (commonly via **springdoc-openapi**). If your build includes springdoc, the defaults are typically:
-
-- OpenAPI JSON: `GET /v3/api-docs`
-- Swagger UI: `GET /swagger-ui/index.html`
-
-If those endpoints are not available, add springdoc (example for Spring Boot 3 / MVC):
-
-```xml
-<dependency>
-  <groupId>org.springdoc</groupId>
-  <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-  <version>2.5.0</version>
-</dependency>
-```
-
-Then restart the application and access `/swagger-ui/index.html`.
-
----
-
 ## HTTP Endpoints (High-level)
 
 
