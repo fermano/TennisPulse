@@ -1,0 +1,477 @@
+openapi: 3.0.3
+info:
+  title: Tennis Pulse API
+  version: 0.1.0
+  description: OpenAPI contract for Tennis Pulse (players, clubs, matches, rankings,
+    analytics highlights).
+servers:
+- url: http://localhost:8080
+tags:
+- name: Players
+- name: Clubs
+- name: Matches
+- name: Rankings
+- name: Analytics
+paths:
+  /api/players:
+    get:
+      tags:
+      - Players
+      summary: List players
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PlayerDto'
+    post:
+      tags:
+      - Players
+      summary: Create player
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePlayerRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlayerDto'
+  /api/players/{id}:
+    put:
+      tags:
+      - Players
+      summary: Update player
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePlayerRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlayerDto'
+    delete:
+      tags:
+      - Players
+      summary: Delete player
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+  /api/clubs:
+    get:
+      tags:
+      - Clubs
+      summary: List clubs
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ClubDto'
+    post:
+      tags:
+      - Clubs
+      summary: Create club
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateClubRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubDto'
+  /api/clubs/{id}:
+    put:
+      tags:
+      - Clubs
+      summary: Update club
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateClubRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubDto'
+    delete:
+      tags:
+      - Clubs
+      summary: Delete club
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+  /api/matches:
+    get:
+      tags:
+      - Matches
+      summary: List matches
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MatchDto'
+    post:
+      tags:
+      - Matches
+      summary: Create match
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateMatchRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MatchDto'
+  /api/matches/{id}:
+    get:
+      tags:
+      - Matches
+      summary: Get match by id
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MatchDto'
+  /api/matches/{id}/status:
+    put:
+      tags:
+      - Matches
+      summary: Update match status
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateMatchStatusRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MatchDto'
+  /api/rankings/wins/current-year:
+    get:
+      tags:
+      - Rankings
+      summary: Top winners in the current year (cached)
+      parameters:
+      - name: limit
+        in: query
+        required: true
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PlayerWinsRankingDto'
+  /api/rankings/wins/last-month:
+    get:
+      tags:
+      - Rankings
+      summary: Top winners in the last 30 days (cached)
+      parameters:
+      - name: limit
+        in: query
+        required: true
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PlayerWinsRankingDto'
+  /api/analytics/highlights:
+    get:
+      tags:
+      - Analytics
+      summary: Highlights dashboard (cached)
+      parameters:
+      - name: range
+        in: query
+        required: true
+        schema:
+          $ref: '#/components/schemas/TimelineRange'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HighlightsDashboardResponse'
+components:
+  schemas:
+    TimelineRange:
+      type: string
+      enum:
+      - ALL_TIME
+      - LAST_MONTH
+      - LAST_6_MONTHS
+      - LAST_12_MONTHS
+      - YEAR_TO_DATE
+      description: Time window for analytics queries.
+    PlayerWinsRankingDto:
+      type: object
+      required:
+      - playerId
+      - playerName
+      - wins
+      properties:
+        playerId:
+          type: string
+        playerName:
+          type: string
+        wins:
+          type: integer
+          format: int64
+          minimum: 0
+    PlayerHighlightDto:
+      type: object
+      required:
+      - playerId
+      - name
+      - score
+      - details
+      properties:
+        playerId:
+          type: string
+        name:
+          type: string
+        score:
+          type: number
+          format: double
+        details:
+          type: object
+          additionalProperties:
+            type: number
+            format: double
+          description: Category-specific metric breakdown.
+    HighlightsDashboardResponse:
+      type: object
+      required:
+      - range
+      - highlights
+      properties:
+        range:
+          $ref: '#/components/schemas/TimelineRange'
+        highlights:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/PlayerHighlightDto'
+          description: Map of highlight category -> highlight.
+    PlayerDto:
+      type: object
+      required:
+      - id
+      - name
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+    CreatePlayerRequest:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          minLength: 1
+    UpdatePlayerRequest:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          minLength: 1
+    ClubDto:
+      type: object
+      required:
+      - id
+      - name
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        city:
+          type: string
+        country:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+    CreateClubRequest:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          minLength: 1
+        city:
+          type: string
+        country:
+          type: string
+    UpdateClubRequest:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          minLength: 1
+        city:
+          type: string
+        country:
+          type: string
+    MatchStatus:
+      type: string
+      enum:
+      - SCHEDULED
+      - IN_PROGRESS
+      - COMPLETED
+      - CANCELLED
+    MatchDto:
+      type: object
+      required:
+      - id
+      - playerAId
+      - playerBId
+      - status
+      properties:
+        id:
+          type: string
+        playerAId:
+          type: string
+        playerBId:
+          type: string
+        status:
+          $ref: '#/components/schemas/MatchStatus'
+        scheduledAt:
+          type: string
+          format: date-time
+        winnerPlayerId:
+          type: string
+          nullable: true
+        finalScore:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+    CreateMatchRequest:
+      type: object
+      required:
+      - playerAId
+      - playerBId
+      properties:
+        playerAId:
+          type: string
+        playerBId:
+          type: string
+        scheduledAt:
+          type: string
+          format: date-time
+    UpdateMatchStatusRequest:
+      type: object
+      required:
+      - status
+      properties:
+        status:
+          $ref: '#/components/schemas/MatchStatus'
+        winnerPlayerId:
+          type: string
+        finalScore:
+          type: string
+      description: When status becomes COMPLETED, provide winnerPlayerId and finalScore
+        as required by domain rules.

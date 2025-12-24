@@ -1,248 +1,130 @@
-# 🎾 Tennis Pulse — Tennis Match Tracking Platform
+# Tennis Pulse — Tennis Match Tracking Platform
 
-**Tennis Pulse** is a showcase project built using **Spring Boot**, demonstrating a clean and modern backend architecture for managing tennis players, clubs, and matches.
-It was designed to highlight professional development practices: REST API design, layered architecture, Flyway migrations, transactional domain logic, DTO mapping, containerized infrastructure, and future integration with NoSQL, caching, and AWS messaging.
-
----
-
-## 🚀 Features & Functionalities
-
-### 🧍 Players
-- Create, list, update and delete players
-- (Future) Enriched with analytics data for personalized coaching tips
-
-### 🏟️ Clubs
-- Create, list, update and delete clubs
-- Store basic metadata like name, city and country
-
-### 🎾 Matches
-- Create matches between two players
-- Track lifecycle:
-  - `SCHEDULED`
-  - `IN_PROGRESS`
-  - `COMPLETED`
-  - `CANCELLED`
-- Update match status with winner and final score
-
-### 📊 Analytics & Coaching (MongoDB + Rule Engine)
-- Collect per-player and per-match metrics in a NoSQL store (MongoDB)
-- Apply a simple rule engine (threshold-based `if` rules) over analytics data
-- Expose **coaching tips** based on patterns, e.g.:
-  - Low 2nd serve points won
-  - High unforced errors on backhand
-  - Specific score patterns in tight sets
-
-### 📈 Rankings & Global Stats (Redis)
-- Use Redis to cache frequently accessed, global information:
-  - Player rankings
-  - Leaderboards
-  - Hot aggregated stats
-- Designed for **fast read access** from the API without hitting PostgreSQL/Mongo every time
-
-### 📬 Asynchronous Events & Integrations (SQS)
-- Publish domain events (e.g. `MatchCompleted`) to SQS
-- Background workers consume these events to:
-  - Update analytics documents in MongoDB
-  - Refresh rankings / global stats in Redis
-  - Enable future external integrations (notifications, reporting, etc.)
-
+Tennis Pulse is a Spring Boot backend showcase for managing tennis players, clubs, and matches, with analytics and cached leaderboard-style read models. The codebase emphasizes a clean, layered architecture; explicit DTO boundaries; reproducible infrastructure; and pragmatic integrations (PostgreSQL, MongoDB, Redis).
 
 
 ---
 
-## 🧱 Architecture Overview
+## Key Features
 
-The project follows a Clean(ish) Hexagonal / Layered Architecture to separate concerns, improve testability, and support multiple infrastructure adapters.
+### Core Domain (PostgreSQL)
+- **Players**
+  - Create, list, update, delete players
+- **Clubs**
+  - Create, list, update, delete clubs
+- **Matches**
+  - Create matches between two players
+  - Match lifecycle: `SCHEDULED`, `IN_PROGRESS`, `COMPLETED`, `CANCELLED`
+  - Update match status with winner and final score
 
-```
-┌─────────────────────────┐
-│       Controller        │  (REST Layer)
-└─────────────────────────┘
-           ↓ DTOs
-┌──────────────────────────────────────────────┐
-│              Application Layer               │
-│  - MatchCommandService                       │
-│  - MatchQueryService                         │
-│  - CoachingService        (uses analytics +  │
-│                            rule engine)      │
-│  - RankingService         (uses Redis cache) │
-└──────────────────────────────────────────────┘
-           ↓ business flow
-┌─────────────────────────┐
-│     Domain Services     │  (business rules for
-│   (match logic, etc.)   │   creation/result) 
-└─────────────────────────┘
-           ↓ persistence (core)
-┌───────────────────────────────┐
-│      Repository / Infra       │
-│                               │
-│  ┌─────────────────────────┐  │
-│  │   JPA Repositories      │──┼──► PostgreSQL
-│  │  (Players, Matches,     │  │   Core source of truth
-│  │   Clubs, etc.)          │  │
-│  └─────────────────────────┘  │
-│                               │
-│  ┌─────────────────────────┐  │
-│  │   Redis Cache Adapter   │──┼──► Redis
-│  │  - Player rankings      │  │   (fast global reads)
-│  │  - Global stats         │  │
-│  └─────────────────────────┘  │
-│                               │
-│  ┌─────────────────────────┐  │
-│  │    SQS Publisher        │──┼──► SQS
-│  │  - MatchCreated         │  │   (domain events)
-│  │  - MatchCompleted       │  │
-│  └─────────────────────────┘  │
-└───────────────────────────────┘
+### Analytics & Highlights (MongoDB)
+- Aggregates match analytics stored in MongoDB to generate a **Highlights Dashboard**.
+- Computes per-player highlight categories (e.g., best serve, best rally, best net play, pressure performance, clean baseline).
+- Supports a time window via `TimelineRange`:
+  - `ALL_TIME`, `LAST_MONTH`, `LAST_6_MONTHS`, `LAST_12_MONTHS`, `YEAR_TO_DATE`
 
-         ▲                                     
-         │ SQS events                          
-┌──────────────────────────────────────────────┐
-│        Analytics / Coaching Side             │
-│                                              │
-│  ┌───────────────────────────────────────┐   │
-│  │          SQS Consumers / Workers      │   │
-│  │  - listen to Match events             │   │
-│  │  - compute / update analytics         │   │
-│  │  - write per-player/per-match stats   │   │
-│  └───────────────────────────────────────┘   │
-│                  ↓                           │
-│  ┌─────────────────────────┐                 │
-│  │   Analytics Repository  │──► MongoDB      │
-│  │  - per-player metrics   │   (NoSQL        │
-│  │  - per-match metrics    │    analytics)   │
-│  └─────────────────────────┘                 │
-│                  ↓                           │
-│  ┌─────────────────────────┐                 │
-│  │   Rule Engine           │                 │
-│  │  - applies thresholds   │                 │
-│  │  - derives coaching     │                 │
-│  │    tips from Mongo data │                 │
-│  └─────────────────────────┘                 │
-│                  ↑                           │
-│        CoachingService (Application Layer)   │
-└──────────────────────────────────────────────┘
-
-```
-
-### Architectural Choices
-
-- **DTOs** instead of exposing JPA entities  
-- **Query Services** with transactional boundaries  
-- **Domain Services** enforcing rules (winner/finalScore only for COMPLETED)  
-- **Flyway migrations** for reproducible databases  
-- **Docker Compose** for local infra  
-- **LocalStack** enabling AWS-like messaging
+### Rankings (Redis Cache)
+- Cached read models for ranking endpoints (e.g., “top winners current year” / “top winners last month”).
+- Redis TTL configured per cache (e.g., `rankings`, `highlights`) with JSON serialization suitable for Java records/DTOs.
 
 ---
 
-## 🐳 Running Tennis Pulse Locally
+## Architecture Overview
 
-### Prerequisites  
-- Docker + Docker Compose  
-- Java 17+  
+The project follows a Clean(ish) layered / hexagonal style:
+- **API layer**: controllers + DTOs (records)
+- **Application layer**: orchestration/services, transactional boundaries
+- **Domain layer**: domain rules and invariants
+- **Infrastructure layer**: adapters (JPA/PostgreSQL, MongoDB analytics, Redis cache)
+
+---
+
+## Tech Stack
+
+- Java 17+
+- Spring Boot 3 (Web MVC, Validation, Cache)
+- Spring Data JPA + Hibernate (PostgreSQL)
+- Spring Data MongoDB (analytics)
+- Spring Data Redis (cache)
+- Flyway (schema migrations)
+- Docker Compose (local infra)
+- Lombok
+
+(LocalStack/SQS may exist in infra and/or roadmap; treat as optional unless explicitly enabled in your local profile.)
+
+---
+
+## Running Locally
+
+### Prerequisites
+- Docker + Docker Compose
+- Java 17+
 - Maven or `./mvnw`
 
----
-
-## 1️⃣ Start infrastructure
-
+### 1) Start infrastructure
 ```bash
 docker compose up -d
 ```
 
-Starts:
-- PostgreSQL  
-- MongoDB (future use)  
-- Redis (future use)  
-- LocalStack (SQS/S3 emulation)
+The repository’s `docker-compose.yml` starts the backing services required for local development. 
 
----
-
-## 2️⃣ Run the Spring Boot app
-
+### 2) Run the Spring Boot app
 ```bash
 ./mvnw spring-boot:run
 ```
 
-Flyway migrations run automatically.
-
-App available at:
-
-```
-http://localhost:8080
-```
+App default:
+- `http://localhost:8080`
 
 ---
 
-## 📚 API Endpoints
+## API Documentation (Swagger / OpenAPI)
+
+This project is intended to expose an OpenAPI/Swagger UI (commonly via **springdoc-openapi**). If your build includes springdoc, the defaults are typically:
+
+- OpenAPI JSON: `GET /v3/api-docs`
+- Swagger UI: `GET /swagger-ui/index.html`
+
+If those endpoints are not available, add springdoc (example for Spring Boot 3 / MVC):
+
+```xml
+<dependency>
+  <groupId>org.springdoc</groupId>
+  <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+  <version>2.5.0</version>
+</dependency>
+```
+
+Then restart the application and access `/swagger-ui/index.html`.
+
+---
+
+## HTTP Endpoints (High-level)
+
 
 ### Matches
-```
-GET    /api/matches
-GET    /api/matches/{id}
-POST   /api/matches
-PUT    /api/matches/{id}/status
-```
+- `GET /api/matches`
+- `GET /api/matches/{id}`
+- `POST /api/matches`
+- `PUT /api/matches/{id}/status` 
 
 ### Players
-```
-GET    /api/players
-POST   /api/players
-PUT    /api/players/{id}
-DELETE /api/players/{id}
-```
+- `GET /api/players`
+- `POST /api/players`
+- `PUT /api/players/{id}`
+- `DELETE /api/players/{id}` 
 
 ### Clubs
-```
-GET    /api/clubs
-POST   /api/clubs
-PUT    /api/clubs/{id}
-DELETE /api/clubs/{id}
-```
+- `GET /api/clubs`
+- `POST /api/clubs`
+- `PUT /api/clubs/{id}`
+- `DELETE /api/clubs/{id}` 
+
+### Rankings (cached)
+- `GET /api/rankings/wins/current-year?limit={n}`
+- `GET /api/rankings/wins/last-month?limit={n}`
+
+### Highlights (cached)
+- `GET /api/analytics/highlights?range={TimelineRange}`
 
 ---
-
-## 🧪 Postman Collection
-
-Located at:
-```
-postman/TennisPulse.postman_collection.json
-```
-
----
-
-## 🛠 Tech Stack
-
-- Java 17 / 21  
-- Spring Boot 3  
-- Spring Web MVC  
-- Spring Data JPA / Hibernate  
-- Flyway  
-- PostgreSQL  
-- MongoDB (future analytics)  
-- Redis (future caching)  
-- LocalStack (AWS emulation)  
-- Docker Compose  
-- Lombok  
-
----
-
-## 🔮 Roadmap
-
-- Redis caching  
-- MongoDB analytics  
-- SQS event on match completed  
-
----
-
-## 👤 About
-
-**Tennis Pulse** is a personal and technical showcase designed to:  
-- Model a real sports domain  
-- Demonstrate clean architecture  
-- Show production-ready practices  
-- Integrate multiple storage and messaging layers
-
-It reflects both engineering capability and personal passion.
-
