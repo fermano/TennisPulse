@@ -13,7 +13,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -40,10 +40,10 @@ class HighlightsControllerTest {
         String player1Id = UUID.randomUUID().toString();
         String player2Id = UUID.randomUUID().toString();
 
-        Map<HighlightCategory, PlayerHighlightDto> highlights = new EnumMap<>(HighlightCategory.class);
-        highlights.put(HighlightCategory.BEST_SERVE,
+        Map<String, PlayerHighlightDto> highlights = new HashMap<>();
+        highlights.put(HighlightCategory.BEST_SERVE.name(),
                 new PlayerHighlightDto(player1Id, "Rafael Nadal", 85.5, Map.of("FIRST_SERVE_IN", 90.0)));
-        highlights.put(HighlightCategory.BEST_NET_PLAYER,
+        highlights.put(HighlightCategory.BEST_NET_PLAYER.name(),
                 new PlayerHighlightDto(player2Id, "Roger Federer", 88.0, Map.of("NET_POINTS_WON", 92.0)));
 
         HighlightsDashboardResponse response = new HighlightsDashboardResponse(
@@ -72,8 +72,8 @@ class HighlightsControllerTest {
         // Arrange
         String playerId = UUID.randomUUID().toString();
 
-        Map<HighlightCategory, PlayerHighlightDto> highlights = new EnumMap<>(HighlightCategory.class);
-        highlights.put(HighlightCategory.BEST_SERVE,
+        Map<String, PlayerHighlightDto> highlights = new HashMap<>();
+        highlights.put(HighlightCategory.BEST_SERVE.name(),
                 new PlayerHighlightDto(playerId, "Novak Djokovic", 90.0, Map.of("FIRST_SERVE_IN", 95.0)));
 
         HighlightsDashboardResponse response = new HighlightsDashboardResponse(
@@ -99,8 +99,8 @@ class HighlightsControllerTest {
         // Arrange
         String playerId = UUID.randomUUID().toString();
 
-        Map<HighlightCategory, PlayerHighlightDto> highlights = new EnumMap<>(HighlightCategory.class);
-        highlights.put(HighlightCategory.BEST_PRESSURE_PLAYER,
+        Map<String, PlayerHighlightDto> highlights = new HashMap<>();
+        highlights.put(HighlightCategory.BEST_PRESSURE_PLAYER.name(),
                 new PlayerHighlightDto(playerId, "Andy Murray", 82.5, Map.of("BREAK_POINT_CONVERSION", 75.0)));
 
         HighlightsDashboardResponse response = new HighlightsDashboardResponse(
@@ -126,8 +126,8 @@ class HighlightsControllerTest {
         // Arrange
         String playerId = UUID.randomUUID().toString();
 
-        Map<HighlightCategory, PlayerHighlightDto> highlights = new EnumMap<>(HighlightCategory.class);
-        highlights.put(HighlightCategory.CLEANEST_BASELINE,
+        Map<String, PlayerHighlightDto> highlights = new HashMap<>();
+        highlights.put(HighlightCategory.CLEANEST_BASELINE.name(),
                 new PlayerHighlightDto(playerId, "Stan Wawrinka", 78.3,
                         Map.of("UNFORCED_ERRORS_FOREHAND", 5.0, "UNFORCED_ERRORS_BACKHAND", 3.0)));
 
@@ -154,8 +154,8 @@ class HighlightsControllerTest {
         // Arrange
         String playerId = UUID.randomUUID().toString();
 
-        Map<HighlightCategory, PlayerHighlightDto> highlights = new EnumMap<>(HighlightCategory.class);
-        highlights.put(HighlightCategory.BEST_RALLY_PLAYER,
+        Map<String, PlayerHighlightDto> highlights = new HashMap<>();
+        highlights.put(HighlightCategory.BEST_RALLY_PLAYER.name(),
                 new PlayerHighlightDto(playerId, "Rafael Nadal", 91.2,
                         Map.of("LONG_RALLY_WIN_RATE", 85.0)));
 
@@ -180,7 +180,7 @@ class HighlightsControllerTest {
     @Test
     void getHighlights_shouldReturnEmptyHighlights_whenNoDataExists() throws Exception {
         // Arrange
-        Map<HighlightCategory, PlayerHighlightDto> emptyHighlights = new EnumMap<>(HighlightCategory.class);
+        Map<String, PlayerHighlightDto> emptyHighlights = new HashMap<>();
 
         HighlightsDashboardResponse response = new HighlightsDashboardResponse(
                 TimelineRange.LAST_MONTH,
@@ -207,16 +207,16 @@ class HighlightsControllerTest {
         String player4Id = UUID.randomUUID().toString();
         String player5Id = UUID.randomUUID().toString();
 
-        Map<HighlightCategory, PlayerHighlightDto> highlights = new EnumMap<>(HighlightCategory.class);
-        highlights.put(HighlightCategory.BEST_SERVE,
+        Map<String, PlayerHighlightDto> highlights = new HashMap<>();
+        highlights.put(HighlightCategory.BEST_SERVE.name(),
                 new PlayerHighlightDto(player1Id, "Player 1", 85.0, Map.of()));
-        highlights.put(HighlightCategory.BEST_RALLY_PLAYER,
+        highlights.put(HighlightCategory.BEST_RALLY_PLAYER.name(),
                 new PlayerHighlightDto(player2Id, "Player 2", 82.0, Map.of()));
-        highlights.put(HighlightCategory.BEST_NET_PLAYER,
+        highlights.put(HighlightCategory.BEST_NET_PLAYER.name(),
                 new PlayerHighlightDto(player3Id, "Player 3", 88.0, Map.of()));
-        highlights.put(HighlightCategory.BEST_PRESSURE_PLAYER,
+        highlights.put(HighlightCategory.BEST_PRESSURE_PLAYER.name(),
                 new PlayerHighlightDto(player4Id, "Player 4", 79.0, Map.of()));
-        highlights.put(HighlightCategory.CLEANEST_BASELINE,
+        highlights.put(HighlightCategory.CLEANEST_BASELINE.name(),
                 new PlayerHighlightDto(player5Id, "Player 5", 90.0, Map.of()));
 
         HighlightsDashboardResponse response = new HighlightsDashboardResponse(
@@ -250,8 +250,8 @@ class HighlightsControllerTest {
                 "SECOND_SERVE_POINTS_WON", 78.1
         );
 
-        Map<HighlightCategory, PlayerHighlightDto> highlights = new EnumMap<>(HighlightCategory.class);
-        highlights.put(HighlightCategory.BEST_SERVE,
+        Map<String, PlayerHighlightDto> highlights = new HashMap<>();
+        highlights.put(HighlightCategory.BEST_SERVE.name(),
                 new PlayerHighlightDto(playerId, "Rafael Nadal", 87.2, details));
 
         HighlightsDashboardResponse response = new HighlightsDashboardResponse(
@@ -287,12 +287,12 @@ class HighlightsControllerTest {
         // Arrange
         String playerId = UUID.randomUUID().toString();
 
-        Map<HighlightCategory, PlayerHighlightDto> highlights = new EnumMap<>(HighlightCategory.class);
-        highlights.put(HighlightCategory.BEST_SERVE,
+        Map<String, PlayerHighlightDto> highlights = new HashMap<>();
+        highlights.put(HighlightCategory.BEST_SERVE.name(),
                 new PlayerHighlightDto(playerId, "Dominant Player", 90.0, Map.of()));
-        highlights.put(HighlightCategory.BEST_NET_PLAYER,
+        highlights.put(HighlightCategory.BEST_NET_PLAYER.name(),
                 new PlayerHighlightDto(playerId, "Dominant Player", 92.0, Map.of()));
-        highlights.put(HighlightCategory.BEST_PRESSURE_PLAYER,
+        highlights.put(HighlightCategory.BEST_PRESSURE_PLAYER.name(),
                 new PlayerHighlightDto(playerId, "Dominant Player", 88.0, Map.of()));
 
         HighlightsDashboardResponse response = new HighlightsDashboardResponse(

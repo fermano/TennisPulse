@@ -5,8 +5,10 @@ import com.tennispulse.domain.MatchEntity;
 import com.tennispulse.domain.PlayerEntity;
 import com.tennispulse.repository.MatchRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -19,7 +21,10 @@ public class MatchQueryService {
     @Transactional(readOnly = true)
     public MatchController.MatchResponse getById(String id) {
         MatchEntity m = matchRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Match not found: " + id));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Match not found: " + id
+                ));
 
         return toResponse(m);
     }

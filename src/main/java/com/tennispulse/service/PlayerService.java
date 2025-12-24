@@ -4,7 +4,9 @@ import com.tennispulse.domain.PlayerEntity;
 import com.tennispulse.repository.PlayerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 import java.util.List;
@@ -30,7 +32,10 @@ public class PlayerService {
 
     public PlayerEntity findById(String id) {
         return playerRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Player not found: " + id));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Player not found: " + id
+                ));
     }
 
     public PlayerEntity update(String id, PlayerEntity updated) {

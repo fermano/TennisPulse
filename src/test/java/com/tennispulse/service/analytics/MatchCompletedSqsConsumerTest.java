@@ -38,6 +38,9 @@ class MatchCompletedSqsConsumerTest {
     @Mock
     private PlayerMatchAnalyticsRepository analyticsRepository;
 
+    @Mock
+    private PlayerHighlightsService playerHighlightsService;
+
     @InjectMocks
     private MatchCompletedSqsConsumer consumer;
 

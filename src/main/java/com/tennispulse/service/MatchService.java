@@ -11,9 +11,11 @@ import com.tennispulse.repository.PlayerRepository;
 import com.tennispulse.service.analytics.SqsMatchEventPublisher;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 import java.util.List;
@@ -27,6 +29,7 @@ public class MatchService {
     private final MatchRepository matchRepository;
     private final PlayerRepository playerRepository;
     private final ClubRepository clubRepository;
+    private final RankingService rankingService;
 
     @Transactional
     public MatchEntity create(String clubId, String player1Id, String player2Id) {
@@ -59,7 +62,10 @@ public class MatchService {
 
     public MatchEntity findById(String id) {
         return matchRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Match not found: " + id));
+                .orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.NOT_FOUND,
+                "Match not found: " + id
+        ));
     }
 
     @Transactional
@@ -97,6 +103,8 @@ public class MatchService {
             match.setWinner(winner);
             match.setFinalScore(finalScore);
             match.setEndTime(Instant.now());
+
+            rankingService.invalidateRankingsCache();
         }
 
         if (status == MatchStatus.CANCELLED) {

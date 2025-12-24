@@ -9,6 +9,8 @@ import com.tennispulse.domain.analytics.AnalyticsMetric;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.*;
@@ -28,6 +30,7 @@ public class PlayerHighlightsService {
     private final MongoTemplate mongoTemplate;
     private final com.tennispulse.repository.PlayerRepository playerRepository;
 
+    @Cacheable(value = "highlights", key = "#range")
     public HighlightsDashboardResponse getHighlights(TimelineRange range) {
         LocalDateTime from = computeStartDate(range);
 
@@ -35,15 +38,20 @@ public class PlayerHighlightsService {
         List<PlayerAggregate> aggregates = aggregatePerPlayer(from);
 
         // 2) Compute highlights
-        Map<HighlightCategory, PlayerHighlightDto> highlights = new EnumMap<>(HighlightCategory.class);
+        Map<String, PlayerHighlightDto> highlights = new HashMap<>();
 
-        bestServeHighlight(aggregates).ifPresent(h -> highlights.put(HighlightCategory.BEST_SERVE, h));
-        bestRallyHighlight(aggregates).ifPresent(h -> highlights.put(HighlightCategory.BEST_RALLY_PLAYER, h));
-        bestNetHighlight(aggregates).ifPresent(h -> highlights.put(HighlightCategory.BEST_NET_PLAYER, h));
-        bestPressureHighlight(aggregates).ifPresent(h -> highlights.put(HighlightCategory.BEST_PRESSURE_PLAYER, h));
-        cleanestBaselineHighlight(aggregates).ifPresent(h -> highlights.put(HighlightCategory.CLEANEST_BASELINE, h));
+        bestServeHighlight(aggregates).ifPresent(h -> highlights.put(HighlightCategory.BEST_SERVE.name(), h));
+        bestRallyHighlight(aggregates).ifPresent(h -> highlights.put(HighlightCategory.BEST_RALLY_PLAYER.name(), h));
+        bestNetHighlight(aggregates).ifPresent(h -> highlights.put(HighlightCategory.BEST_NET_PLAYER.name(), h));
+        bestPressureHighlight(aggregates).ifPresent(h -> highlights.put(HighlightCategory.BEST_PRESSURE_PLAYER.name(), h));
+        cleanestBaselineHighlight(aggregates).ifPresent(h -> highlights.put(HighlightCategory.CLEANEST_BASELINE.name(), h));
 
         return new HighlightsDashboardResponse(range, highlights);
+    }
+
+    @CacheEvict(value = "highlights", allEntries = true)
+    public void invalidateHighlightsCache() {
+        log.debug("PlayerHighlights cache invalidated");
     }
 
     private List<PlayerAggregate> aggregatePerPlayer(LocalDateTime from) {

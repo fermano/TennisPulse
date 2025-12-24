@@ -11,6 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 import java.util.List;
@@ -165,7 +166,7 @@ class MatchQueryServiceTest {
         String matchId = UUID.randomUUID().toString();
         when(matchRepository.findById(matchId)).thenReturn(Optional.empty());
 
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class,
                 () -> matchQueryService.getById(matchId));
 
         assertTrue(ex.getMessage().contains("Match not found"));

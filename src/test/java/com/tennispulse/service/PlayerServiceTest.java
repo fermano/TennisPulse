@@ -9,6 +9,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 import java.util.List;
@@ -85,7 +86,7 @@ class PlayerServiceTest {
         String id = UUID.randomUUID().toString();
         when(playerRepository.findById(id)).thenReturn(Optional.empty());
 
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class,
                 () -> playerService.findById(id));
 
         assertTrue(ex.getMessage().contains("Player not found"));

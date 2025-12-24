@@ -4,11 +4,15 @@ import com.tennispulse.api.dto.PlayerWinsRankingDto;
 import com.tennispulse.domain.analytics.*;
 import com.tennispulse.repository.MatchRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.*;
 import java.util.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class RankingService {
@@ -18,6 +22,7 @@ public class RankingService {
     /**
      * Most wins in the current year.
      */
+    @Cacheable(value = "rankings", key = "'wins:current-year:limit:' + #limit")
     public List<PlayerWinsRankingDto> getTopWinnersCurrentYear(int limit) {
         ZonedDateTime now = ZonedDateTime.now();
         ZonedDateTime startOfYear = now.withDayOfYear(1).toLocalDate().atStartOfDay(now.getZone());
@@ -27,10 +32,15 @@ public class RankingService {
     /**
      * Most wins in the last 30 days.
      */
+    @Cacheable(value = "rankings", key = "'wins:last-month:limit:' + #limit")
     public List<PlayerWinsRankingDto> getTopWinnersLastMonth(int limit) {
         ZonedDateTime now = ZonedDateTime.now();
         ZonedDateTime start = now.minusDays(30).toLocalDate().atStartOfDay(now.getZone());
-        return getTopWinnersBetween(start.toInstant(), now.toInstant(), limit);
+        List<PlayerWinsRankingDto> result = getTopWinnersBetween(start.toInstant(), now.toInstant(), limit);
+        log.info("Computed rankings type={}, firstElemType={}",
+                result.getClass(),
+                result.isEmpty() ? "n/a" : result.getFirst().getClass());
+        return result;
     }
 
     private List<PlayerWinsRankingDto> getTopWinnersBetween(Instant from, Instant to, int limit) {
@@ -45,5 +55,10 @@ public class RankingService {
                 })
                 .limit(limit)
                 .toList();
+    }
+
+    @CacheEvict(value = "rankings", allEntries = true)
+    public void invalidateRankingsCache() {
+        log.debug("Rankings cache invalidated");
     }
 }

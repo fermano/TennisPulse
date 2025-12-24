@@ -67,10 +67,10 @@ class PlayerMetricsTimelineServiceTest {
         assertEquals(3, response.timeline().size());
 
         // Verify timeline is sorted descending (newest first)
-        PlayerMonthlyMetricsDto first = response.timeline().get(0);
+        PlayerMonthlyMetricsDto first = response.timeline().getFirst();
         assertEquals(YearMonth.of(2024, 12), first.month());
-        assertTrue(first.averages().containsKey(AnalyticsMetric.FIRST_SERVE_IN));
-        assertEquals(85.0, first.averages().get(AnalyticsMetric.FIRST_SERVE_IN));
+        assertTrue(first.averages().containsKey(AnalyticsMetric.FIRST_SERVE_IN.name()));
+        assertEquals(85.0, first.averages().get(AnalyticsMetric.FIRST_SERVE_IN.name()));
 
         PlayerMonthlyMetricsDto last = response.timeline().get(2);
         assertEquals(YearMonth.of(2024, 10), last.month());
@@ -80,7 +80,7 @@ class PlayerMetricsTimelineServiceTest {
         assertFalse(response.overallAverages().isEmpty());
 
         // Check FIRST_SERVE_IN average: (85 + 80 + 78) / 3 = 81.0
-        assertEquals(81.0, response.overallAverages().get(AnalyticsMetric.FIRST_SERVE_IN), 0.01);
+        assertEquals(81.0, response.overallAverages().get(AnalyticsMetric.FIRST_SERVE_IN.name()), 0.01);
 
         verify(mongoTemplate).aggregate(any(Aggregation.class), eq("player_match_analytics"), eq(Document.class));
     }
@@ -157,7 +157,7 @@ class PlayerMetricsTimelineServiceTest {
         // Assert
         assertNotNull(response);
         assertEquals(1, response.timeline().size()); // Only valid doc should be included
-        assertEquals(YearMonth.of(2024, 12), response.timeline().get(0).month());
+        assertEquals(YearMonth.of(2024, 12), response.timeline().getFirst().month());
     }
 
     @Test
@@ -184,10 +184,10 @@ class PlayerMetricsTimelineServiceTest {
         assertNotNull(response);
         assertEquals(1, response.timeline().size());
 
-        PlayerMonthlyMetricsDto monthly = response.timeline().get(0);
+        PlayerMonthlyMetricsDto monthly = response.timeline().getFirst();
         assertEquals(1, monthly.averages().size()); // Only FIRST_SERVE_IN should be present
-        assertTrue(monthly.averages().containsKey(AnalyticsMetric.FIRST_SERVE_IN));
-        assertEquals(85.0, monthly.averages().get(AnalyticsMetric.FIRST_SERVE_IN));
+        assertTrue(monthly.averages().containsKey(AnalyticsMetric.FIRST_SERVE_IN.name()));
+        assertEquals(85.0, monthly.averages().get(AnalyticsMetric.FIRST_SERVE_IN.name()));
     }
 
     @Test
@@ -208,20 +208,20 @@ class PlayerMetricsTimelineServiceTest {
         );
 
         // Assert
-        Map<AnalyticsMetric, Double> overallAverages = response.overallAverages();
+        Map<String, Double> overallAverages = response.overallAverages();
         assertNotNull(overallAverages);
 
         // FIRST_SERVE_IN: (90 + 80 + 70) / 3 = 80.0
-        assertEquals(80.0, overallAverages.get(AnalyticsMetric.FIRST_SERVE_IN), 0.01);
+        assertEquals(80.0, overallAverages.get(AnalyticsMetric.FIRST_SERVE_IN.name()), 0.01);
 
         // FIRST_SERVE_POINTS_WON: (80 + 70 + 60) / 3 = 70.0
-        assertEquals(70.0, overallAverages.get(AnalyticsMetric.FIRST_SERVE_POINTS_WON), 0.01);
+        assertEquals(70.0, overallAverages.get(AnalyticsMetric.FIRST_SERVE_POINTS_WON.name()), 0.01);
 
         // SECOND_SERVE_POINTS_WON: (70 + 60 + 50) / 3 = 60.0
-        assertEquals(60.0, overallAverages.get(AnalyticsMetric.SECOND_SERVE_POINTS_WON), 0.01);
+        assertEquals(60.0, overallAverages.get(AnalyticsMetric.SECOND_SERVE_POINTS_WON.name()), 0.01);
 
         // NET_POINTS_WON: (85 + 75 + 65) / 3 = 75.0
-        assertEquals(75.0, overallAverages.get(AnalyticsMetric.NET_POINTS_WON), 0.01);
+        assertEquals(75.0, overallAverages.get(AnalyticsMetric.NET_POINTS_WON.name()), 0.01);
     }
 
     @Test
@@ -286,12 +286,12 @@ class PlayerMetricsTimelineServiceTest {
         assertEquals(1, response.timeline().size());
 
         // Overall averages should equal the single month's values
-        PlayerMonthlyMetricsDto monthly = response.timeline().get(0);
-        Map<AnalyticsMetric, Double> overallAverages = response.overallAverages();
+        PlayerMonthlyMetricsDto monthly = response.timeline().getFirst();
+        Map<String, Double> overallAverages = response.overallAverages();
 
         assertEquals(
-                monthly.averages().get(AnalyticsMetric.FIRST_SERVE_IN),
-                overallAverages.get(AnalyticsMetric.FIRST_SERVE_IN)
+                monthly.averages().get(AnalyticsMetric.FIRST_SERVE_IN.name()),
+                overallAverages.get(AnalyticsMetric.FIRST_SERVE_IN.name())
         );
     }
 
@@ -321,13 +321,13 @@ class PlayerMetricsTimelineServiceTest {
         );
 
         // Assert
-        Map<AnalyticsMetric, Double> overallAverages = response.overallAverages();
+        Map<String, Double> overallAverages = response.overallAverages();
 
         // FIRST_SERVE_IN should average across both months: (90 + 80) / 2 = 85.0
-        assertEquals(85.0, overallAverages.get(AnalyticsMetric.FIRST_SERVE_IN), 0.01);
+        assertEquals(85.0, overallAverages.get(AnalyticsMetric.FIRST_SERVE_IN.name()), 0.01);
 
         // NET_POINTS_WON should only use the one month that has it: 85.0 / 1 = 85.0
-        assertEquals(85.0, overallAverages.get(AnalyticsMetric.NET_POINTS_WON), 0.01);
+        assertEquals(85.0, overallAverages.get(AnalyticsMetric.NET_POINTS_WON.name()), 0.01);
     }
 
     // Helper method to create a monthly document with sample metrics

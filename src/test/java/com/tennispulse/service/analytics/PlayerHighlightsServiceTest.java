@@ -108,7 +108,7 @@ class PlayerHighlightsServiceTest {
         assertEquals(5, response.highlights().size());
 
         // Verify BEST_SERVE highlight (player1 should win with higher serve stats)
-        PlayerHighlightDto bestServe = response.highlights().get(HighlightCategory.BEST_SERVE);
+        PlayerHighlightDto bestServe = response.highlights().get(HighlightCategory.BEST_SERVE.name());
         assertNotNull(bestServe);
         assertEquals(player1Id, bestServe.playerId());
         assertEquals("Rafael Nadal", bestServe.playerName());
@@ -117,17 +117,17 @@ class PlayerHighlightsServiceTest {
         assertTrue(bestServe.details().containsKey("FIRST_SERVE_IN"));
 
         // Verify BEST_NET_PLAYER highlight
-        PlayerHighlightDto bestNet = response.highlights().get(HighlightCategory.BEST_NET_PLAYER);
+        PlayerHighlightDto bestNet = response.highlights().get(HighlightCategory.BEST_NET_PLAYER.name());
         assertNotNull(bestNet);
         assertEquals(player1Id, bestNet.playerId());
 
         // Verify BEST_PRESSURE_PLAYER highlight
-        PlayerHighlightDto bestPressure = response.highlights().get(HighlightCategory.BEST_PRESSURE_PLAYER);
+        PlayerHighlightDto bestPressure = response.highlights().get(HighlightCategory.BEST_PRESSURE_PLAYER.name());
         assertNotNull(bestPressure);
         assertEquals(player1Id, bestPressure.playerId());
 
         // Verify CLEANEST_BASELINE highlight (player1 has fewer errors)
-        PlayerHighlightDto cleanestBaseline = response.highlights().get(HighlightCategory.CLEANEST_BASELINE);
+        PlayerHighlightDto cleanestBaseline = response.highlights().get(HighlightCategory.CLEANEST_BASELINE.name());
         assertNotNull(cleanestBaseline);
         assertEquals(player1Id, cleanestBaseline.playerId());
 
@@ -224,7 +224,7 @@ class PlayerHighlightsServiceTest {
         assertFalse(response.highlights().isEmpty());
 
         // Service should handle missing metrics gracefully with zero defaults
-        PlayerHighlightDto bestServe = response.highlights().get(HighlightCategory.BEST_SERVE);
+        PlayerHighlightDto bestServe = response.highlights().get(HighlightCategory.BEST_SERVE.name());
         assertNotNull(bestServe);
         assertTrue(bestServe.score() >= 0);
     }
@@ -245,7 +245,7 @@ class PlayerHighlightsServiceTest {
         HighlightsDashboardResponse response = playerHighlightsService.getHighlights(TimelineRange.LAST_MONTH);
 
         // Assert
-        PlayerHighlightDto bestServe = response.highlights().get(HighlightCategory.BEST_SERVE);
+        PlayerHighlightDto bestServe = response.highlights().get(HighlightCategory.BEST_SERVE.name());
         assertNotNull(bestServe);
 
         // Expected score: 0.4 * 100 + 0.3 * 90 + 0.3 * 80 = 40 + 27 + 24 = 91

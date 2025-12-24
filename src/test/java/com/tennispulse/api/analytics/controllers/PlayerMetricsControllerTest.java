@@ -38,22 +38,22 @@ class PlayerMetricsControllerTest {
         // Arrange
         UUID playerId = UUID.randomUUID();
 
-        Map<AnalyticsMetric, Double> metrics1 = new EnumMap<>(AnalyticsMetric.class);
-        metrics1.put(AnalyticsMetric.FIRST_SERVE_IN, 85.0);
-        metrics1.put(AnalyticsMetric.NET_POINTS_WON, 78.0);
+        Map<String, Double> metrics1 = new HashMap<>();
+        metrics1.put(AnalyticsMetric.FIRST_SERVE_IN.name(), 85.0);
+        metrics1.put(AnalyticsMetric.NET_POINTS_WON.name(), 78.0);
 
-        Map<AnalyticsMetric, Double> metrics2 = new EnumMap<>(AnalyticsMetric.class);
-        metrics2.put(AnalyticsMetric.FIRST_SERVE_IN, 82.0);
-        metrics2.put(AnalyticsMetric.NET_POINTS_WON, 75.0);
+        Map<String, Double> metrics2 = new HashMap<>();
+        metrics2.put(AnalyticsMetric.FIRST_SERVE_IN.name(), 82.0);
+        metrics2.put(AnalyticsMetric.NET_POINTS_WON.name(), 75.0);
 
         List<PlayerMonthlyMetricsDto> timeline = Arrays.asList(
                 new PlayerMonthlyMetricsDto(YearMonth.of(2024, 12), metrics1),
                 new PlayerMonthlyMetricsDto(YearMonth.of(2024, 11), metrics2)
         );
 
-        Map<AnalyticsMetric, Double> overallAverages = new EnumMap<>(AnalyticsMetric.class);
-        overallAverages.put(AnalyticsMetric.FIRST_SERVE_IN, 83.5);
-        overallAverages.put(AnalyticsMetric.NET_POINTS_WON, 76.5);
+        Map<String, Double> overallAverages = new HashMap<>();
+        overallAverages.put(AnalyticsMetric.FIRST_SERVE_IN.name(), 83.5);
+        overallAverages.put(AnalyticsMetric.NET_POINTS_WON.name(), 76.5);
 
         PlayerMetricsTimelineResponseDto response = new PlayerMetricsTimelineResponseDto(
                 playerId.toString(),
@@ -85,15 +85,15 @@ class PlayerMetricsControllerTest {
         // Arrange
         UUID playerId = UUID.randomUUID();
 
-        Map<AnalyticsMetric, Double> metrics = new EnumMap<>(AnalyticsMetric.class);
-        metrics.put(AnalyticsMetric.FIRST_SERVE_IN, 88.0);
+        Map<String, Double> metrics = new HashMap<>();
+        metrics.put(AnalyticsMetric.FIRST_SERVE_IN.name(), 88.0);
 
         List<PlayerMonthlyMetricsDto> timeline = Collections.singletonList(
                 new PlayerMonthlyMetricsDto(YearMonth.of(2024, 12), metrics)
         );
 
-        Map<AnalyticsMetric, Double> overallAverages = new EnumMap<>(AnalyticsMetric.class);
-        overallAverages.put(AnalyticsMetric.FIRST_SERVE_IN, 88.0);
+        Map<String, Double> overallAverages = new HashMap<>();
+        overallAverages.put(AnalyticsMetric.FIRST_SERVE_IN.name(), 88.0);
 
         PlayerMetricsTimelineResponseDto response = new PlayerMetricsTimelineResponseDto(
                 playerId.toString(),
@@ -122,7 +122,7 @@ class PlayerMetricsControllerTest {
         UUID playerId = UUID.randomUUID();
 
         List<PlayerMonthlyMetricsDto> timeline = Collections.emptyList();
-        Map<AnalyticsMetric, Double> overallAverages = new EnumMap<>(AnalyticsMetric.class);
+        Map<String, Double> overallAverages = new HashMap<>();
 
         PlayerMetricsTimelineResponseDto response = new PlayerMetricsTimelineResponseDto(
                 playerId.toString(),
@@ -149,15 +149,15 @@ class PlayerMetricsControllerTest {
         // Arrange
         UUID playerId = UUID.randomUUID();
 
-        Map<AnalyticsMetric, Double> metrics = new EnumMap<>(AnalyticsMetric.class);
-        metrics.put(AnalyticsMetric.BREAK_POINT_CONVERSION, 72.5);
+        Map<String, Double> metrics = new HashMap<>();
+        metrics.put(AnalyticsMetric.BREAK_POINT_CONVERSION.name(), 72.5);
 
         List<PlayerMonthlyMetricsDto> timeline = Collections.singletonList(
                 new PlayerMonthlyMetricsDto(YearMonth.of(2024, 12), metrics)
         );
 
-        Map<AnalyticsMetric, Double> overallAverages = new EnumMap<>(AnalyticsMetric.class);
-        overallAverages.put(AnalyticsMetric.BREAK_POINT_CONVERSION, 72.5);
+        Map<String, Double> overallAverages = new HashMap<>();
+        overallAverages.put(AnalyticsMetric.BREAK_POINT_CONVERSION.name(), 72.5);
 
         PlayerMetricsTimelineResponseDto response = new PlayerMetricsTimelineResponseDto(
                 playerId.toString(),
@@ -184,15 +184,15 @@ class PlayerMetricsControllerTest {
         // Arrange
         UUID playerId = UUID.randomUUID();
 
-        Map<AnalyticsMetric, Double> metrics = new EnumMap<>(AnalyticsMetric.class);
-        metrics.put(AnalyticsMetric.WINNERS, 25.0);
+        Map<String, Double> metrics = new HashMap<>();
+        metrics.put(AnalyticsMetric.WINNERS.name(), 25.0);
 
         List<PlayerMonthlyMetricsDto> timeline = Collections.singletonList(
                 new PlayerMonthlyMetricsDto(YearMonth.of(2024, 12), metrics)
         );
 
-        Map<AnalyticsMetric, Double> overallAverages = new EnumMap<>(AnalyticsMetric.class);
-        overallAverages.put(AnalyticsMetric.WINNERS, 25.0);
+        Map<String, Double> overallAverages = new HashMap<>();
+        overallAverages.put(AnalyticsMetric.WINNERS.name(), 25.0);
 
         PlayerMetricsTimelineResponseDto response = new PlayerMetricsTimelineResponseDto(
                 playerId.toString(),
@@ -220,7 +220,7 @@ class PlayerMetricsControllerTest {
         UUID playerId = UUID.randomUUID();
 
         List<PlayerMonthlyMetricsDto> emptyTimeline = Collections.emptyList();
-        Map<AnalyticsMetric, Double> emptyAverages = new EnumMap<>(AnalyticsMetric.class);
+        Map<String, Double> emptyAverages = new HashMap<>();
 
         PlayerMetricsTimelineResponseDto response = new PlayerMetricsTimelineResponseDto(
                 playerId.toString(),
@@ -247,16 +247,16 @@ class PlayerMetricsControllerTest {
         // Arrange
         UUID playerId = UUID.randomUUID();
 
-        Map<AnalyticsMetric, Double> metrics1 = new EnumMap<>(AnalyticsMetric.class);
-        metrics1.put(AnalyticsMetric.FIRST_SERVE_IN, 85.0);
-        metrics1.put(AnalyticsMetric.WINNERS, 20.0);
+        Map<String, Double> metrics1 = new HashMap<>();
+        metrics1.put(AnalyticsMetric.FIRST_SERVE_IN.name(), 85.0);
+        metrics1.put(AnalyticsMetric.WINNERS.name(), 20.0);
 
-        Map<AnalyticsMetric, Double> metrics2 = new EnumMap<>(AnalyticsMetric.class);
-        metrics2.put(AnalyticsMetric.FIRST_SERVE_IN, 82.0);
+        Map<String, Double> metrics2 = new HashMap<>();
+        metrics2.put(AnalyticsMetric.FIRST_SERVE_IN.name(), 82.0);
         // WINNERS missing in this month
 
-        Map<AnalyticsMetric, Double> metrics3 = new EnumMap<>(AnalyticsMetric.class);
-        metrics3.put(AnalyticsMetric.WINNERS, 22.0);
+        Map<String, Double> metrics3 = new HashMap<>();
+        metrics3.put(AnalyticsMetric.WINNERS.name(), 22.0);
         // FIRST_SERVE_IN missing in this month
 
         List<PlayerMonthlyMetricsDto> timeline = Arrays.asList(
@@ -265,9 +265,9 @@ class PlayerMetricsControllerTest {
                 new PlayerMonthlyMetricsDto(YearMonth.of(2024, 10), metrics3)
         );
 
-        Map<AnalyticsMetric, Double> overallAverages = new EnumMap<>(AnalyticsMetric.class);
-        overallAverages.put(AnalyticsMetric.FIRST_SERVE_IN, 83.5);
-        overallAverages.put(AnalyticsMetric.WINNERS, 21.0);
+        Map<String, Double> overallAverages = new HashMap<>();
+        overallAverages.put(AnalyticsMetric.FIRST_SERVE_IN.name(), 83.5);
+        overallAverages.put(AnalyticsMetric.WINNERS.name(), 21.0);
 
         PlayerMetricsTimelineResponseDto response = new PlayerMetricsTimelineResponseDto(
                 playerId.toString(),
@@ -319,9 +319,9 @@ class PlayerMetricsControllerTest {
         // Arrange
         UUID playerId = UUID.randomUUID();
 
-        Map<AnalyticsMetric, Double> metrics = new EnumMap<>(AnalyticsMetric.class);
+        Map<String, Double> metrics = new HashMap<>();
         for (AnalyticsMetric metric : AnalyticsMetric.values()) {
-            metrics.put(metric, 75.0 + metric.ordinal());
+            metrics.put(metric.name(), 75.0 + metric.ordinal());
         }
 
         List<PlayerMonthlyMetricsDto> timeline = Collections.singletonList(
@@ -351,14 +351,14 @@ class PlayerMetricsControllerTest {
         // Arrange
         UUID playerId = UUID.randomUUID();
 
-        Map<AnalyticsMetric, Double> metrics1 = new EnumMap<>(AnalyticsMetric.class);
-        metrics1.put(AnalyticsMetric.FIRST_SERVE_IN, 90.0);
+        Map<String, Double> metrics1 = new HashMap<>();
+        metrics1.put(AnalyticsMetric.FIRST_SERVE_IN.name(), 90.0);
 
-        Map<AnalyticsMetric, Double> metrics2 = new EnumMap<>(AnalyticsMetric.class);
-        metrics2.put(AnalyticsMetric.FIRST_SERVE_IN, 85.0);
+        Map<String, Double> metrics2 = new HashMap<>();
+        metrics2.put(AnalyticsMetric.FIRST_SERVE_IN.name(), 85.0);
 
-        Map<AnalyticsMetric, Double> metrics3 = new EnumMap<>(AnalyticsMetric.class);
-        metrics3.put(AnalyticsMetric.FIRST_SERVE_IN, 80.0);
+        Map<String, Double> metrics3 = new HashMap<>();
+        metrics3.put(AnalyticsMetric.FIRST_SERVE_IN.name(), 80.0);
 
         List<PlayerMonthlyMetricsDto> timeline = Arrays.asList(
                 new PlayerMonthlyMetricsDto(YearMonth.of(2024, 12), metrics1),
@@ -366,8 +366,8 @@ class PlayerMetricsControllerTest {
                 new PlayerMonthlyMetricsDto(YearMonth.of(2024, 10), metrics3)
         );
 
-        Map<AnalyticsMetric, Double> overallAverages = new EnumMap<>(AnalyticsMetric.class);
-        overallAverages.put(AnalyticsMetric.FIRST_SERVE_IN, 85.0);
+        Map<String, Double> overallAverages = new HashMap<>();
+        overallAverages.put(AnalyticsMetric.FIRST_SERVE_IN.name(), 85.0);
 
         PlayerMetricsTimelineResponseDto response = new PlayerMetricsTimelineResponseDto(
                 playerId.toString(),

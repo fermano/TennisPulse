@@ -70,7 +70,7 @@ public class PlayerMetricsTimelineService {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
 
-        Map<AnalyticsMetric, Double> overallAverages = computeOverallAverages(timeline);
+        Map<String, Double> overallAverages = computeOverallAverages(timeline);
 
         return new PlayerMetricsTimelineResponseDto(
                 playerId.toString(),
@@ -91,11 +91,11 @@ public class PlayerMetricsTimelineService {
 
         YearMonth ym = YearMonth.of(year, month);
 
-        Map<AnalyticsMetric, Double> values = new EnumMap<>(AnalyticsMetric.class);
+        Map<String, Double> values = new LinkedHashMap<>();
         for (AnalyticsMetric m : AnalyticsMetric.values()) {
             Double val = doc.getDouble(m.name());
             if (val != null) {
-                values.put(m, val);
+                values.put(m.name(), val);
             }
         }
 
@@ -103,8 +103,8 @@ public class PlayerMetricsTimelineService {
     }
 
 
-    private Map<AnalyticsMetric, Double> computeOverallAverages(List<PlayerMonthlyMetricsDto> timeline) {
-        Map<AnalyticsMetric, List<Double>> buckets = new EnumMap<>(AnalyticsMetric.class);
+    private Map<String, Double> computeOverallAverages(List<PlayerMonthlyMetricsDto> timeline) {
+        Map<String, List<Double>> buckets = new LinkedHashMap<>();
 
         for (PlayerMonthlyMetricsDto month : timeline) {
             month.averages().forEach((metric, value) -> {

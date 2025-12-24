@@ -4,7 +4,9 @@ import com.tennispulse.domain.ClubEntity;
 import com.tennispulse.repository.ClubRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 import java.util.List;
@@ -29,8 +31,10 @@ public class ClubService {
     }
 
     public ClubEntity findById(String id) {
-        return clubRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Club not found: " + id));
+        return clubRepository.findById(id)                .orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.NOT_FOUND,
+                "Club not found: " + id
+        ));
     }
 
     public ClubEntity update(String id, ClubEntity updated) {
@@ -55,7 +59,7 @@ public class ClubService {
 
         existing.setDeleted(true);
         existing.setDeletedAt(Instant.now());
-        existing.setName("Deleted club " + id.toString().substring(0, 8));
+        existing.setName("Deleted club " + id.substring(0, 8));
         existing.setCity(null);
         existing.setCountry(null);
 

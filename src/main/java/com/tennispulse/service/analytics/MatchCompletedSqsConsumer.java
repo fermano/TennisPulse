@@ -23,6 +23,7 @@ public class MatchCompletedSqsConsumer {
     private final ObjectMapper objectMapper;
     private final CoachingRuleEngine coachingRuleEngine;
     private final PlayerMatchAnalyticsRepository analyticsRepository;
+    private final PlayerHighlightsService playerHighlightsService;
 
     @SqsListener("${tennispulse.sqs.match-completed-queue-name}")
     public void handleMessage(@Payload String messageBody) {
@@ -60,6 +61,7 @@ public class MatchCompletedSqsConsumer {
                 PlayerMatchAnalyticsDocument.from(event, statsPayload, analysis);
 
         analyticsRepository.save(doc);
+        playerHighlightsService.invalidateHighlightsCache();
     }
 
     private Map<AnalyticsMetric, Double> mapToRawMetrics(PlayerStatsPayload s) {
