@@ -26,6 +26,15 @@ Tennis Pulse is a Spring Boot backend showcase for managing tennis players, club
 - Cached read models for ranking endpoints (e.g., “top winners current year” / “top winners last month”).
 - Redis TTL configured per cache (e.g., `rankings`, `highlights`) with JSON serialization suitable for Java records/DTOs.
 
+### Eventing Sandbox (LocalStack: SQS/S3)
+- LocalStack is included as an **AWS-compatible local sandbox** (currently enabled with `SERVICES=sqs,s3` in `docker-compose.yml`).
+- Intended role:
+  - Provide a local environment for experimenting with **event-driven workflows** (e.g., emitting events on match completion and processing analytics asynchronously).
+  - Enable local development of AWS integrations without requiring real AWS credentials.
+- If you are not using eventing features, LocalStack can remain running without impact, or be removed/disabled from Compose.
+
+> Note: Depending on the current branch/implementation stage, SQS/S3 may be used for prototypes/experiments rather than core request/response flows.
+
 ---
 
 ## Architecture Overview
@@ -34,7 +43,7 @@ The project follows a Clean(ish) layered / hexagonal style:
 - **API layer**: controllers + DTOs (records)
 - **Application layer**: orchestration/services, transactional boundaries
 - **Domain layer**: domain rules and invariants
-- **Infrastructure layer**: adapters (JPA/PostgreSQL, MongoDB analytics, Redis cache)
+- **Infrastructure layer**: adapters (JPA/PostgreSQL, MongoDB analytics, Redis cache, AWS-local integrations)
 
 ---
 
@@ -99,7 +108,15 @@ Include the token in all API requests:
 Authorization: Bearer <access_token>
 ```
 
-All endpoints require authentication.
+All endpoints (except Swagger/OpenAPI endpoints in dev) require authentication.
+
+### Roles
+
+Keycloak realm roles are mapped to Spring Security authorities:
+- `USER`
+- `ADMIN`
+
+Role-based authorization can be enforced at the controller or service layer as needed.
 
 ---
 
@@ -113,9 +130,9 @@ All endpoints require authentication.
 - Spring Data Redis (cache)
 - Flyway (schema migrations)
 - Docker Compose (local infra)
+- Keycloak (IdP)
+- LocalStack (AWS local sandbox: SQS/S3)
 - Lombok
-
-(LocalStack/SQS may exist in infra and/or roadmap; treat as optional unless explicitly enabled in your local profile.)
 
 ---
 
@@ -131,7 +148,12 @@ All endpoints require authentication.
 docker compose up -d
 ```
 
-This starts PostgreSQL, MongoDB, Redis, and Keycloak with a preconfigured realm.
+This starts:
+- PostgreSQL
+- MongoDB
+- Redis
+- LocalStack (SQS/S3 sandbox)
+- Keycloak (IdP) with a preconfigured realm
 
 ### 2) Run the Spring Boot app
 ```bash
