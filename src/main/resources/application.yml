@@ -15,7 +15,11 @@ tennispulse:
 spring:
   application:
     name: tennis-pulse
-
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8888/realms/tennispulse
   cloud:
     aws:
       region:

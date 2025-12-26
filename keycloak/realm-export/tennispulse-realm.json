@@ -1,0 +1,72 @@
+{
+  "realm": "tennispulse",
+  "enabled": true,
+
+  "accessTokenLifespan": 1800,
+
+  "verifyEmail": false,
+  "registrationAllowed": false,
+  "resetPasswordAllowed": false,
+  "rememberMe": false,
+
+  "roles": {
+    "realm": [
+      { "name": "USER", "description": "Default user role" },
+      { "name": "ADMIN", "description": "Admin role" }
+    ]
+  },
+
+  "clients": [
+    {
+      "clientId": "tennispulse-api",
+      "name": "TennisPulse API",
+      "enabled": true,
+
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "tennispulse-secret",
+
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": false,
+
+      "redirectUris": [],
+      "webOrigins": [],
+
+      "defaultClientScopes": [
+        "web-origins",
+        "acr",
+        "profile",
+        "roles",
+        "email"
+      ],
+      "optionalClientScopes": [
+        "address",
+        "phone",
+        "offline_access",
+        "microprofile-jwt"
+      ]
+    }
+  ],
+
+  "users": [
+    {
+      "username": "tennispulse",
+      "enabled": true,
+      "email": "tennispulse@local",
+      "emailVerified": true,
+      "firstName": "Tennis",
+      "lastName": "Pulse",
+      "requiredActions": [],
+      "credentials": [
+        {
+          "type": "password",
+          "value": "tennispulse",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["USER"]
+    }
+  ]
+}
